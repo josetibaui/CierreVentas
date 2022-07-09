@@ -30,10 +30,9 @@ def crearWidgetsHeader(headerFrame, root):
     global usuario
     global ahora
 
-    # logo = tk.PhotoImage(file='/home/users/jtibau/Desarrollo/Palmeras/CierreVentas/img/LasPalmerasLogotipo.png')
-    logo = tk.PhotoImage(file='./img/LasPalmerasLogotipo.png', height=100, width=174)
+    root.logo = tk.PhotoImage(file='./img/LasPalmerasLogotipo.png', height=100, width=174)
+    logoLabel = tk.Label(headerFrame, image=root.logo, bg=defaultColor)
 
-    logoLabel = tk.Label(headerFrame, image=logo, text="Las Palmeras Logo", bg=defaultColor, font=('Helvetica', 14), compound='right')
     tituloLabel = tk.Label(headerFrame, text='Cierre Diario de Ventas', justify='center', font=('Helvetica', 20), bg=defaultColor)
     identFrame = tk.Frame(headerFrame, bg=defaultColor)
 
@@ -81,10 +80,10 @@ def crearFrames(root):
     dataFrame.pack(side='left', fill='y')
 
 def cerrarVentana():
-    print("Ventana cerrada")
-
-def salir():
     pass
+
+def salir(root):
+    root.quit()
 
 def main():
 
@@ -93,9 +92,9 @@ def main():
 
     root.protocol('WM_DELETE_WINDOW', cerrarVentana)
 
-    root.title ='Administración de Locales.'
     root.geometry('800x600')
     root.config(bg=defaultColor)
+    root.title('Sistema de registro de datos')
 
     rootStyle = ttk.Style(root)
 
