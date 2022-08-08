@@ -114,7 +114,7 @@ def crearWidgetsResumen(resumenFrame):
     gastosGeneralesLabel = tk.Label(resumenFrame, text='Total Gastos Generales', bg=defaultColor)
     gastosPersonalLabel = tk.Label(resumenFrame, text='Total Gastos de Personal', bg=defaultColor)
     depositosLabel = tk.Label(resumenFrame, text='Total Depósitos', bg=defaultColor)
-    formasPagosLabel = tk.Label(resumenFrame, text='Total de Formas de Pago', bg=defaultColor)
+    formasPagosLabel = tk.Label(resumenFrame, text='Total recibido', bg=defaultColor)
     anulacionesLabel = tk.Label(resumenFrame, text='Anulaciones', bg=defaultColor)
     devolucionesLabel = tk.Label(resumenFrame, text='Devoluciones', bg=defaultColor)
     cortesiasLabel = tk.Label(resumenFrame, text='Total Cortesías', bg=defaultColor)
@@ -423,18 +423,16 @@ def crearWigetsGastosPersonal(gastosPersonalFrame):
 def crearWigetsDepositos(depositosFrame):
     global defaultColor
     
-    tituloLabel = tk.Label(depositosFrame, text='Detalle de Depósitos', bg=defaultColor, font=('Helvetica bold', 16))
-    bancoDepositosLabel = tk.Label(depositosFrame, text='Banco', bg=defaultColor)
+    tituloLabel = tk.Label(depositosFrame, text='Detalle de Formas de Pago de Clientes', bg=defaultColor, font=('Helvetica bold', 16))
+    bancoDepositosLabel = tk.Label(depositosFrame, text='Forma de Pago', bg=defaultColor)
     valorDepositosLabel =tk.Label(depositosFrame, text='Valor', bg=defaultColor)
-    observacionDepositosLabel = tk.Label(depositosFrame, text='Observaciones', bg=defaultColor)
-    valorADepositarLabel = tk.Label(depositosFrame, text='Valor a Depositar', bg=defaultColor)
+    observacionDepositosLabel = tk.Label(depositosFrame, text='Valor Recibido en Efectivo', bg=defaultColor)
 
     bancoDepositosCombo = ttk.Combobox(depositosFrame)
     bancoDepositosCombo['values'] = ['Banco del Pichincha']
     bancoDepositosCombo['state'] = 'readonly' 
     valorDepositosEntry = tk.Entry(depositosFrame)
     observacionDepositosEntry = tk.Entry(depositosFrame)
-    valorSugeridoLabel = tk.Label(depositosFrame, text='', bg='#ffffff')
 
     columnasDepositos = ('banco', 'valor', 'observacion')
     depositosTree = ttk.Treeview(depositosFrame, columns=columnasDepositos, show='headings')
@@ -447,11 +445,9 @@ def crearWigetsDepositos(depositosFrame):
     bancoDepositosLabel.grid(row=1, column=0, sticky='WE')
     valorDepositosLabel.grid(row=1, column=1, sticky='WE')
     observacionDepositosLabel.grid(row=1, column=2, sticky='WE')
-    valorADepositarLabel.grid(row=1, column=3, sticky='WE')
     bancoDepositosCombo.grid(row=2, column=0, sticky='WE')
     valorDepositosEntry.grid(row=2, column=1, sticky='WE')
     observacionDepositosEntry.grid(row=2, column=2, sticky='WE')
-    valorSugeridoLabel.grid(row=2, column=3, sticky='WE')
 
     depositosTree.grid(row=3, column=0, columnspan=3, sticky='nswe', pady=10)
 
