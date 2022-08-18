@@ -2,7 +2,7 @@ from openpyxl import Workbook, load_workbook
 import os
 import sqlite3
 from sqlite3 import Error
-from passlib.hash import sha512_crypt as sha512
+# from passlib.hash import sha512_crypt as sha512
 
 def crearConeccion():
 
@@ -132,12 +132,12 @@ def carga_igPersonas(ws):
  
     #   Encriptar la contraseña (llave='palmeras1989')
     
-    for persona in datos:
-        if persona[7] != '':
-            identificacion = persona[3]
-            passw = sha512.encrypt(persona[7])
-            cursor.execute(updStr, (passw, identificacion))
-            db.commit()
+    # for persona in datos:
+    #     if persona[7] != '':
+    #         identificacion = persona[3]
+    #         passw = sha512.encrypt(persona[7])
+    #         cursor.execute(updStr, (passw, identificacion))
+    #         db.commit()
     db.close()
 
 def carga_igPersonasLocales(ws):
@@ -269,8 +269,9 @@ def carga_baBancos(ws):
     db.close()
 
 
-def main():
-    wb = load_workbook(filename='/home/users/jtibau/Desarrollo/Palmeras/PalmerasERP/src/CargaDatos/DatosIniciales.xlsx', data_only=True, read_only=True)
+def cargaDatosIniciales():
+    datosInicialesFileName = os.getcwd() + '/src/CargaDatos/DatosIniciales.xlsx'
+    wb = load_workbook(filename=datosInicialesFileName, data_only=True, read_only=True)
     for ws in wb:
         if ws.title == 'ig_locales':
             carga_igLocales(wb[ws.title])
@@ -294,6 +295,41 @@ def main():
             carga_locPagosPersonal(wb[ws.title])
         elif ws.title == 'ba_bancos':
             carga_baBancos(wb[ws.title])
-    
+
+def crearDb():
+    sqlitePath = os.getcwd() + '/data/PalmerasERP.db'
+    if os.path.exists(sqlitePath):
+        os.remove(sqlitePath)
+    db = crearConeccion()
+    db.close()
+
+def crearTablas():
+    scriptFile = os.getcwd() + '/src/modelo/crearTablasSQLite.sql'
+    with open(scriptFile) as s:
+        script = s.read()
+
+    db = crearConeccion()
+    cur = db.cursor()
+    cur.executescript(script)
+    db.commit()
+    db.close()
+
+def crearTriggers():
+    db = crearConeccion()
+    cur = db.cursor()
+    triggersFileName = os.getcwd() + '/src/modelo/crearTriggersSQLite.txt'
+    with open(triggersFileName) as triggerFile:
+        triggers = triggerFile.read()
+        for trigger in triggers.split(sep='$', maxsplit=-1):
+            cur.executescript(trigger)
+            db.commit()
+    db.close()
+
+def main():
+    crearDb()
+    crearTablas()
+    crearTriggers()
+    cargaDatosIniciales()
+
 if __name__ == '__main__':
     main()

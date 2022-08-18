@@ -1,97 +1,139 @@
+from curses.ascii import isdigit
+from decimal import Decimal
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import *
+from  modelo.locCortesias import Cortesias  as Cortesias
+from decimal import *
+
+
 
 class VentasFrame(ttk.Frame):
     def __init__(self, dataFrame):
         super().__init__(dataFrame)
 
         self.df = dataFrame
-        
         self.grid(row=0, column=0, sticky='nsew')
 
         dataFrame.gridConfigure(self)
         self.crearWidgets()
+        self.initFocus()
+
+    def validateVentas(self, antes, entrada):
+        getcontext().prec =  2
+        if entrada == None:
+            entrada = 0.00
+        try:
+            valor = Decimal(entrada)
+            self.ventasEntryValue.set(valor)
+            return True
+        except InvalidOperation:
+            self.ventasEntryValue.set(antes)
+            return False
+            
+
+    def inValidateVentas(self):
+        showerror(title='Error', message='error en el valor')
+
+    def ventasEntryReturn(self, event):
+        self.anulacionesEntry.focus()
+
+    def anulacionesEntryReturn(self, event):
+        self.devolucionesEntry.focus()
+
+    def devolucionesEntryReturn(self, event):
+        self.cortesiaTipoCombo.focus()
+
+    def cortesiaTipoComboReturn(self, event):
+        self.cortesiaValorEntry.focus()
+
+    def cortesiaValorEntryReturn(self, event):
+        self.cortesiaObservacionEntry.focus()
+
+    def cortesiaObservacionEntryReturn(self, event):
+        self.ventasEntry.focus()
 
     def crearWidgets(self):
 
         estilo = ttk.Style(self)
         estilo.configure('TLabel', background=self.df.defaultColor)
-        estilo.configure('TEntry', width=10, borderwidth=1, background=self.df.defaultColor)
-        stickyLabelsOptions = {'sticky': 'we', 'padx': 20, 'pady': 5}
-        stickyLabelsEntryOptions = {'sticky': 'we', 'padx': 20, 'pady': 15}
-        stickyEntryOptions = {'sticky': 'we', 'padx': 20, 'pady': 5}
-
+        estilo.configure('TEntry', width=10, borderwidth=1, relief='solid', background=self.df.defaultColor)
+        labelsOptions = {'sticky': 'we', 'padx': 20, 'pady': 2}
+        labelColumnsOptions = {'sticky': 'N', 'padx': 5, 'pady': 10}
 
         tituloLabel = ttk.Label(self, text='Detalle de Ventas, anulaciones y Cortesías del Día', font=('Helvetica bold', 16))
         tituloLabel.grid(row=0, column=0, columnspan=4, pady=20, sticky='n')
 
-        '''
-            Label Name, Label Text, Value Label Name, row, column label, column value or entry 
-        '''
-
-        widgets = [
-            ('ventasLabel', 'Venta Total del día', 'ventasEntry', 1, 0, 1),
-            ('anulacionesLabel', 'Venta Total del día', 'anulacionesEntry', 2, 0, 1),
-            ('devolucionesLabel', 'Devoluciones del día', 'devolucionesEntry', 3, 0, 1),
-            ('cortesiasLabel', 'Cortesías de día', None, 5, 0, None),
-            ('cortesiaTipoLabel,', 'Tipo de Cortesía', 'cortesiaTipoEntry', 4, 1, 5),
-            ('cortesiaValorLabel', 'Valor de la Cortesía', 'cortesiaValorEntry', 4, 2, 5),
-            ('cortesiaObservacionLabel', 'Observaciones', 'cortesiasObservacionEntry', 4, 3, 5)
-        ]
-
-        for widget in widgets:
-            nameLabel = widget[0]
-            textLabel = widget[1]
-            valueLabel = widget[2]
-            rowLabel = widget[3]
-            columnNameLabel = widget[4]
-            columnValueLabel = widget[5]
-
-            nameLabel = ttk.Label(self, text=textLabel)
-            nameLabel.grid(row=rowLabel, column=columnNameLabel, **stickyLabelsOptions)
-
-            # if rowLabel != None:
-            #     valueLabel = ttk.Label(self, text='0.00', style='Values.TLabel')
-            #     valueLabel.grid(row=rowLabel, column=columnValueLabel, **stickyValuesOptions)
-
-        # ventasLabel = ttk.Label(self, text='Venta Total del día')
-        # ventasLabel.grid(row=1, column=0, **stickyLabelsOptions)
-        # ventasEntry = ttk.Entry(self)
-        # ventasEntry.grid(row=1, column=1, **stickyEntryOptions)
         
-        # anulacionesLabel = ttk.Label(self, text='Anulaciones del día')
-        # anulacionesLabel.grid(row=2, column=0, **stickyLabelsOptions)
-        # anulacionesEntry = ttk.Entry(self)
-        # anulacionesEntry.grid(row=2, column=1, **stickyEntryOptions)
+        self.ventasLabel = ttk.Label(self, text='Venta Total del día')
+        self.ventasLabel.grid(row=1, column=0, **labelsOptions)
+        
+        self.ventasEntryValue = tk.StringVar()
+        ventasEntryValid = (self.register(self.validateVentas), '%s', '%P')
+        ventasEntryInvalid = (self.register(self.inValidateVentas),)
+        self.ventasEntry = ttk.Entry(self, textvariable=self.ventasEntryValue, justify=tk.RIGHT)
+        self.ventasEntry.grid(row=1, column=1)
+        # self.ventasEntry.config(validate='focusout', validatecommand=ventasEntryValid, invalidcommand=ventasEntryInvalid)
+        self.ventasEntry.bind('<Return>', self.ventasEntryReturn)
+        self.ventasEntry.bind('<KP_Enter>', self.ventasEntryReturn)
+        
+        self.anulacionesLabel = ttk.Label(self, text='Anulaciones del día')
+        self.anulacionesLabel.grid(row=2, column=0, **labelsOptions)
+        
+        self.anulacionesEntry = ttk.Entry(self)
+        self.anulacionesEntry.grid(row=2, column=1)
+        self.anulacionesEntry.bind('<Return>', self.anulacionesEntryReturn)
+        self.anulacionesEntry.bind('<KP_Enter>', self.anulacionesEntryReturn)
 
-        # devolucionesLabel = ttk.Label(self, text='Devoluciones del día')
-        # devolucionesLabel.grid(row=3, column=0, **stickyLabelsOptions)
-        # devolucionesEntry = ttk.Entry(self)
-        # devolucionesEntry.grid(row=3, column=1, **stickyEntryOptions)
+        self.devolucionesLabel = ttk.Label(self, text='Devoluciones del día')
+        self.devolucionesLabel.grid(row=3, column=0, **labelsOptions)
+        
+        self.devolucionesEntry = ttk.Entry(self)
+        self.devolucionesEntry.grid(row=3, column=1)
+        self.devolucionesEntry.bind('<Return>', self.devolucionesEntryReturn)
+        self.devolucionesEntry.bind('<KP_Enter>', self.devolucionesEntryReturn)
 
-        # cortesiasLabel = ttk.Label(self, text='Cortesías de día')
-        # cortesiasLabel.grid(row=5, column=0, **stickyLabelsOptions)
+        cortesiasLabel = ttk.Label(self, text='Cortesías de día')
+        cortesiasLabel.grid(row=5, column=0, **labelsOptions)
 
-        # cortesiaTipoLabel = ttk.Label(self, text='Tipo de Cortesía')
-        # cortesiaTipoLabel.grid(row=4, column=1, **stickyLabelsEntryOptions)
-        # cortesiaTipoEntry = ttk.Entry(self)
-        # cortesiaTipoEntry.grid(row=5, column=1, **stickyEntryOptions)
+        self.cortesiaTipoLabel = ttk.Label(self, text='Tipo de Cortesía')
+        self.cortesiaTipoLabel.grid(row=4, column=1, **labelColumnsOptions)
+        
+        # print(cortesias)
+        cortesias = Cortesias()
+        listaCortesias = cortesias.queryAll()
+        self.cortesiaTipoCombo = ttk.Combobox(self)
+        # self.cortesiaTipoCombo.grid(row=4, column=3, **labelColumnsOptions)
+        self.cortesiaTipoCombo['values'] = [cortesia[1] for cortesia in listaCortesias]
+        self.cortesiaTipoCombo['state'] = 'readonly'
+        self.cortesiaTipoCombo.grid(row=5, column=1)
+        self.cortesiaTipoCombo.bind('<Return>', self.cortesiaTipoComboReturn)
+        self.cortesiaTipoCombo.bind('<KP_Enter>', self.cortesiaTipoComboReturn)
+        
 
-        # cortesiaValorLabel = ttk.Label(self, text='Valor de la Cortesía')
-        # cortesiaValorLabel.grid(row=4, column=2, **stickyLabelsEntryOptions)
-        # cortesiaValorEntry = ttk.Entry(self)
-        # cortesiaValorEntry.grid(row=5, column=2, **stickyEntryOptions)
+        self.cortesiaValorLabel = ttk.Label(self, text='Valor de la Cortesía')
+        self.cortesiaValorLabel.grid(row=4, column=2, **labelColumnsOptions)
+        
+        self.cortesiaValorEntry = ttk.Entry(self)
+        self.cortesiaValorEntry.grid(row=5, column=2)
+        self.cortesiaValorEntry.bind('<Return>', self.cortesiaValorEntryReturn)
+        self.cortesiaValorEntry.bind('<KP_Enter>', self.cortesiaValorEntryReturn)
 
-        # cortesiaObservacionLabel = ttk.Label(self, text='Observaciones')
-        # cortesiaObservacionLabel.grid(row=4, column=3, **stickyLabelsEntryOptions)
-        # cortesiasObservacionEntry = ttk.Entry(self)
-        # cortesiasObservacionEntry.grid(row=5, column=3,**stickyEntryOptions)
+        self.cortesiaObservacionLabel = ttk.Label(self, text='Observaciones')
+        self.cortesiaObservacionLabel.grid(row=4, column=3, **labelColumnsOptions)
+        self.cortesiaObservacionEntry = ttk.Entry(self)
+        self.cortesiaObservacionEntry.grid(row=5, column=3)
+        self.cortesiaObservacionEntry.bind('<Return>', self.cortesiaObservacionEntryReturn)
+        self.cortesiaObservacionEntry.bind('<KP_Enter>', self.cortesiaObservacionEntryReturn)
 
 
         columnasCortesias =('tipo', 'valor', 'observacion')
         cortesiasTree = ttk.Treeview(self, columns=columnasCortesias, show='headings')
         cortesiasTree.heading('tipo', text='Tipo de Cortesía')
-        cortesiasTree.heading('valor', text='Valor de Cortesía')
+        cortesiasTree.heading('valor', text='Valor de las Cortesías')
         cortesiasTree.heading('observacion', text='Observaciones')
 
-        cortesiasTree.grid(row=6, column=1, columnspan=3, pady=10)
+        cortesiasTree.grid(row=7, column=1, columnspan=3, pady=10,sticky='nswe')
+
+    def initFocus(self):
+        self.ventasEntry.focus()

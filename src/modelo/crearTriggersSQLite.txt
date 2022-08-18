@@ -1,0 +1,51 @@
+CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVentas
+  BEGIN
+    INSERT INTO ig_log VALUES(
+        0, 
+        'loc_cierreVentas',
+        new.idPor,
+        datetime('now'),
+        NULL,
+        new.idCierreVentas || '|' ||
+            new.idLocal || '|' ||
+            new.fecha || '|' ||
+            new.data || '|' ||
+            new.idPor
+    );
+  END;
+$
+CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_upd AFTER UPDATE ON loc_cierreVentas
+  BEGIN
+    INSERT INTO ig_log VALUES(
+        0, 
+        'loc_cierreVentas',
+        new.idPor,
+        datetime('now'),
+        old.idCierreVentas || '|' ||
+            old.idLocal || '|' ||
+            old.fecha || '|' ||
+            old.data || '|' ||
+            old.idPor,
+        new.idCierreVentas || '|' ||
+            new.idLocal || '|' ||
+            new.fecha || '|' ||
+            new.data || '|' ||
+            new.idPor
+    );
+  END;
+$
+CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_del AFTER DELETE ON loc_cierreVentas
+  BEGIN
+    INSERT INTO ig_log VALUES(
+        0, 
+        'loc_cierreVentas',
+        old.idPor,
+        datetime('now'),
+        old.idCierreVentas || '|' ||
+            old.idLocal || '|' ||
+            old.fecha || '|' ||
+            old.data || '|' ||
+            old.idPor,
+        NULL
+    );
+  END;

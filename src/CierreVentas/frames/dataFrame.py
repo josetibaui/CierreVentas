@@ -1,82 +1,73 @@
 import tkinter as tk
 from tkinter import ttk
+from CierreVentas.frames import loginFrame
 from CierreVentas.frames import resumenFrame
 from CierreVentas.frames import ventasFrame
 from CierreVentas.frames import formasPagosFrame
 from CierreVentas.frames import gastosGeneralesFrame
 from CierreVentas.frames import gastosPersonalFrame
 from CierreVentas.frames import depositosFrame
+from CierreVentas.frames import loginFrame
 
 class DataFrame(ttk.Frame):
-    def __init__(self, rootWindow):
+    def __init__(self, rootWindow, headerFrame, commandFrame):
         super().__init__(rootWindow)
 
         self.rw = rootWindow
         self.defaultColor = rootWindow.defaultColor
         estilo = ttk.Style(self.rw)
-        estilo.configure('TFrame', background=self.rw.defaultColor)
-
+        estilo.configure('TFrame', background=self.defaultColor, highlightthickness=1)
+        self['borderwidth'] = 1
+        self['relief'] = 'solid'
         self.pack(side='left', fill='both', expand=True)
 
-        self.crearDataFrames()
+        self.crearDataFrames(headerFrame, commandFrame)
 
-    def crearDataFrames(self):
+    def crearDataFrames(self, headerFrame, commandFrame):
 
-        self.frames = {
-            'resumenFrame': resumenFrame.ResumenFrame(self),
+        self.dataFrames = {
+            'loginFrame': loginFrame.LoginFrame(self, headerFrame, commandFrame),
             'ventasFrame': ventasFrame.VentasFrame(self),
+            'resumenFrame': resumenFrame.ResumenFrame(self),
             'formasPagosFrame': formasPagosFrame.FormasPagosFrame(self),
             'gastosGeneralesFrame': gastosGeneralesFrame.GastosGeneralesFrame(self),
             'gastosPersonalFrame': gastosPersonalFrame.GastosPersonalFrame(self),
-            'depositosFrame': depositosFrame.DepositosFrame(self)
-        }
+            'depositosFrame': depositosFrame.DepositosFrame(self),
+        }    
+            
 
-        self.cambiarFrame('resumenFrame')
+        # self.cambiarFrame('resumenFrame')
+        self.cambiarFrame('loginFrame')
+        self.dataFrames['loginFrame'].usuarioEntry.focus()
 
     def gridConfigure(self, subFrame):
         subFrame.columnconfigure(0, weight=1)
-        subFrame.columnconfigure(1, weight=1)
+        subFrame.columnconfigure(1, weight=3)
         subFrame.columnconfigure(2, weight=1)
-        subFrame.columnconfigure(3, weight=1)
+        subFrame.columnconfigure(3, weight=3)
 
         subFrame.rowconfigure(0, weight=3)
         subFrame.rowconfigure(1, weight=1)
-        subFrame.rowconfigure(3, weight=1)
-        subFrame.rowconfigure(5, weight=1)
-        subFrame.rowconfigure(7, weight=1)
-        subFrame.rowconfigure(9, weight=1)
         subFrame.rowconfigure(2, weight=1)
+        subFrame.rowconfigure(3, weight=1)
         subFrame.rowconfigure(4, weight=1)
+        subFrame.rowconfigure(5, weight=1)
         subFrame.rowconfigure(6, weight=1)
+        subFrame.rowconfigure(7, weight=1)
         subFrame.rowconfigure(8, weight=1)
+        subFrame.rowconfigure(9, weight=1)
         subFrame.rowconfigure(10, weight=1)
-
-        # resumenFrame = ttk.Frame(dataFrame, bg=defaultColor, highlightthickness=1)
-        # resumenFrame.grid(row=0, column=0, sticky='nsew')
-        # crearWidgetsResumen(resumenFrame)
-
-        # ventasFrame = tk.Frame(dataFrame, bg=defaultColor, highlightthickness=1)
-        # ventasFrame.grid(row=0, column=0, sticky='nsew')
-        # crearWidgetsVentas(ventasFrame)
-
-        # formasPagoFrame = tk.Frame(dataFrame, bg=defaultColor, highlightthickness=1)
-        # formasPagoFrame.grid(row=0, column=0, sticky='nsew')
-        # crearWidgetsFormasPago(formasPagoFrame)
-
-        # gastosGeneralesFrame = tk.Frame(dataFrame, bg=defaultColor, highlightthickness=1)
-        # gastosGeneralesFrame.grid(row=0, column=0, sticky='nsew')
-        # crearWigetsgastosGenerales(gastosGeneralesFrame)
-
-        # gastosPersonalFrame = tk.Frame(dataFrame, bg=defaultColor, highlightthickness=1)
-        # gastosPersonalFrame.grid(row=0, column=0, sticky='nsew')
-        # crearWigetsGastosPersonal(gastosPersonalFrame)
-
-        # depositosFrame = tk.Frame(dataFrame, bg=defaultColor, highlightthickness=1)
-        # depositosFrame.grid(row=0, column=0, sticky='nsew')
-        # crearWigetsDepositos(depositosFrame)
-
-        # resumenFrame.tkraise()
 
 
     def cambiarFrame(self, destino):
-        self.frames[destino].tkraise()
+        self.dataFrames[destino].tkraise()
+        if destino == 'ventasFrame':
+            self.dataFrames[destino].ventasEntry.focus()
+        elif destino == 'formasPagosFrame':
+            self.dataFrames[destino].formasPagosCombo.focus()
+        elif destino == 'gastosGeneralesFrame':
+            self.dataFrames[destino].tipoGastoGeneralCombo.focus()
+        # elif destino == 'gastosPersonalFrame':
+        #     self.dataFrames[destino].formasPagosCombo.focus()
+        # elif destino == 'depositosFrame':
+        #     self.dataFrames[destino].formasPagosCombo.focus()

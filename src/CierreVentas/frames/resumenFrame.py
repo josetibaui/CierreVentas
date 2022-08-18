@@ -17,18 +17,15 @@ class ResumenFrame(ttk.Frame):
     def crearWidgets(self):
 
         estilo = ttk.Style(self)
-        estilo.configure('TLabel', background=self.df.defaultColor)
-        estilo.configure('Values.TLabel', width=10, borderwidth=1, background=self.df.defaultColor)
-        stickyLabelsOptions = {'sticky': 'we', 'padx': 20, 'pady': 15}
+        estilo.configure('TLabel', background=self.df.defaultColor, anchor='e')
+        estilo.configure('Values.TLabel', relief='ridge')
+        labelsOptions = {'sticky': 'w', 'padx': 20, 'pady': 5}
+        valuesOptions = {'sticky': 'e', 'padx': 20, 'pady': 5}
 
 
         tituloLabel = ttk.Label(self, text='Resumen de Datos Registrados', font=('Helvetica bold', 16))
         tituloLabel.grid(row=0, column=0, columnspan=4, pady=20)
 
-        estilo.configure('TLabel', background=self.df.defaultColor, anchor='e')
-        estilo.configure('Values.TLabel', relief='ridge')
-        stickyLabelsOptions = {'sticky': 'w', 'padx': 20, 'pady': 5}
-        stickyValuesOptions = {'sticky': 'e', 'padx': 20, 'pady': 5}
 
         '''
             Label Name, Label Text, Value Label Name, row, column label, column value
@@ -57,8 +54,8 @@ class ResumenFrame(ttk.Frame):
             columnValueLabel = widget[5]
 
             nameLabel = ttk.Label(self, text=textLabel)
-            nameLabel.grid(row=rowLabel, column=columnNameLabel, **stickyLabelsOptions)
+            nameLabel.grid(row=rowLabel, column=columnNameLabel, **labelsOptions)
 
             if textLabel != None:
                 valueLabel = ttk.Label(self, text='0.00', style='Values.TLabel')
-                valueLabel.grid(row=rowLabel, column=columnValueLabel, **stickyValuesOptions)
+                valueLabel.grid(row=rowLabel, column=columnValueLabel, **valuesOptions)

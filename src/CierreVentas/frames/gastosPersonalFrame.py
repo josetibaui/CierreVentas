@@ -9,12 +9,34 @@ class GastosPersonalFrame(ttk.Frame):
         
         self.grid(row=0, column=0, sticky='nsew')
 
-        dataFrame.gridConfigure(self)
+        # dataFrame.gridConfigure(self)
         self.crearWidgets()
 
     def crearWidgets(self):
-        pass
+        estilo = ttk.Style(self)
+        estilo.configure('TLabel', background=self.df.defaultColor)
+        estilo.configure('Values.TLabel', relief='ridge')
+        estilo.configure('TCombobox', background=self.df.defaultColor)
+        estilo.configure('TEntry', width=10, borderwidth=1, background=self.df.defaultColor)
+        labelsOptions = {'sticky': 'w', 'padx': 20, 'pady': 5}
+        valuesOptions = {'sticky': 'e', 'padx': 20, 'pady': 5}
+        labelsColumnsOptions = {'sticky': 'n', 'padx': 5, 'pady': 5}
 
+        tituloLabel = ttk.Label(self, text='Detalle de Gastos de Personal', font=('Helvetica bold', 16))
+        tituloLabel.grid(row=0, column=0, columnspan=4, pady=5, sticky='n')
+
+        empleadoLabel = ttk.Label(self, text='Empleado')
+        empleadoLabel.grid(row=1,column=0, **labelsColumnsOptions)
+
+        localOrigenGastoGeneralLabel = ttk.Label(self, text='Tipo de Gastos')
+        localOrigenGastoGeneralLabel.grid(row=1,column=1, **labelsColumnsOptions)
+
+        valorGastoPersonalLabel = ttk.Label(self, text='Valor del Gasto')
+        valorGastoPersonalLabel.grid(row=1,column=2, **labelsColumnsOptions)
+        
+
+        obserbacionGastoGeneralLabel = ttk.Label(self, text='Observaciones')
+        obserbacionGastoGeneralLabel.grid(row=1,column=3, **labelsColumnsOptions)
 
 
 
