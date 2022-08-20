@@ -1,16 +1,15 @@
 import modelo.DBConnection as DBConnection
 
-class Egresos():
+class GastosGenerales():
 
     _idEgreso = None
     _egreso = None
     _cuentaContabilidad = None
     _estado = None
 
-    def __init__(self, esteLocal=None):
+    def __init__(self):
         self.connection = DBConnection.DBConnection.Instance()
         self.cursor= self.connection.connect.cursor()
-        # self.esteLocal = esteLocal
 
 
     @property
@@ -65,7 +64,7 @@ class Egresos():
         pass
 
     def queryById(self, idEgreso):
-        selStr = 'SELECT * FROM loc_egresos WHERE idEgreso = ?'
+        selStr = 'SELECT * FROM loc_gastosGenerales WHERE idEgreso = ?'
         self.cursor.execute(selStr, (idEgreso,))
         return self.cursor.fetchone()
 
@@ -75,21 +74,21 @@ class Egresos():
         else:
             whereStr=''
 
-        orderStr = 'ORDER BY egreso'
-        selStr = f'SELECT * FROM loc_egresos {whereStr} {orderStr}'
+        orderStr = 'ORDER BY gastoGeneral'
+        selStr = f'SELECT * FROM loc_gastosGenerales {whereStr} {orderStr}'
         self.cursor.execute(selStr)
         return self.cursor.fetchall()
 
-    def queryByEgreso(self, egreso, estado=1):
+    def queryByGastoGeneral(self, gastoGeneral, estado=1):
         if egreso == None:
             return None
 
-        whereStr = 'WHERE egreso = ?'
+        whereStr = 'WHERE gastoGeneral = ?'
 
         if estado == 1:
             whereStr=whereStr + ' AND estado = 1'
 
-        selStr = f'SELECT * FROM loc_egresos {whereStr}'
+        selStr = f'SELECT * FROM loc_gastosGenerales {whereStr}'
         self.cursor.execute(selStr, (egreso,))
         return self.cursor.fetchone()
 
@@ -103,29 +102,29 @@ class Egresos():
             whereStr = whereStr + f' AND estado = {estado}'
 
         cuenta = f'%{cuentaContabilidad}%'
-        orderStr = 'ORDER BY egreso'
-        selStr = f'SELECT * FROM loc_egresos {whereStr} {orderStr}'
+        orderStr = 'ORDER BY gastoGeneral'
+        selStr = f'SELECT * FROM loc_gastosGenerales {whereStr} {orderStr}'
         self.cursor.execute(selStr, (cuenta,))
         return self.cursor.fetchall()
 
 
 if __name__== '__main__':
-    egr = Egresos(1)
+    gasto = GastosGenerales()
 
-    uno = egr.queryById(9)
+    uno = gasto.queryById(9)
     print(uno)
     print('---------------------------')
 
-    egreso = egr.queryByEgreso('Transporte')
-    print(egreso)
+    gastos = gasto.queryByGastoGeneral('Transporte')
+    print(gastos)
     print('---------------------------')
 
-    todos =egr.queryAll()
+    todos =gasto.queryAll()
     print(todos)
     print('---------------------------')
     
-    contab = egr.queryLikeCuentaContabilidad('52')
+    contab = gasto.queryLikeCuentaContabilidad('52')
     print(contab)
     print('---------------------------')
 
-    egr.connection.close()
+    gasto.connection.close()

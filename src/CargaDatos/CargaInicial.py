@@ -54,17 +54,17 @@ def crearIndicePerfil(perfiles):
     dictPerfiles = { perfil[1]: perfil for perfil in perfiles}
     return dictPerfiles
 
-def getEgresos():
+def getGastosGenerales():
     db = crearConeccion()
     cursor = db.cursor()
-    selStr = '''SELECT * FROM loc_egresos'''
+    selStr = '''SELECT * FROM loc_gastosGenerales'''
     cursor.execute(selStr)
-    egresos = cursor.fetchall()
+    gastoGeneral = cursor.fetchall()
     db.close()
-    return egresos
+    return gastoGeneral
 
-def crearIndiceEgresos(egresos):
-    dictEgresos = {egreso[1]: egreso for egreso in egresos}
+def crearIndiceGastosGenerales(gastosGenerales):
+    dictEgresos = {egreso[1]: egreso for egreso in gastosGenerales}
     return dictEgresos
 
 def seleccionarDatos(ws):
@@ -81,6 +81,16 @@ def seleccionarDatos(ws):
             if listRow[i] is None:
                 listRow[i] = ''
         row=tuple(listRow)
+
+        # Si hay una fila vacía terminar de buscar datos
+        filaVacia = True
+        for campo in row[0:columnasConDatos]:
+            if campo != '':
+                filaVacia = False
+                break
+
+        if filaVacia:
+            break
 
         # Si hay datos después de la columna "Verif", eliminarlos
         if columnasConDatos:
@@ -173,6 +183,13 @@ def carga_igPerfilesPersonasLocal(ws):
     locales = crearIndiceCodLocal(getLocales())
     perfiles = crearIndicePerfil(getPerfiles())
     datos = seleccionarDatos(ws)
+    # valores = []
+    # for dato in datos:
+    #     perfil = perfiles[dato[0]][0]
+    #     persona = personas[dato[1]][0]
+    #     local = locales[dato[2]][0]
+    #     estado = dato[3]
+    #     valores.append([perfil, persona, local, estado])
     valores=[(perfiles[dato[0]][0], personas[dato[1]][0], locales[dato[2]][0], dato[3]) for dato in datos]
     db = crearConeccion()
     cursor = db.cursor()
@@ -186,12 +203,12 @@ def carga_igPerfilesPersonasLocal(ws):
     db.commit()
     db.close()
 
-def carga_locEgresos(ws):
+def carga_locGastosGenerales(ws):
     datos = seleccionarDatos(ws)
     db = crearConeccion()
     cursor = db.cursor()
-    insStr = '''INSERT OR REPLACE INTO loc_egresos (
-                            egreso,
+    insStr = '''INSERT OR REPLACE INTO loc_gastosGenerales (
+                            gastoGeneral,
                             cuentaContabilidad,
                             estado)
                         VALUES(?, ?, ?)'''
@@ -199,15 +216,15 @@ def carga_locEgresos(ws):
     db.commit()
     db.close()
 
-def carga_locEgresosNoLocales(ws):
+def carga_locGastosNoLocales(ws):
     locales = crearIndiceCodLocal(getLocales())
-    egresos = crearIndiceEgresos(getEgresos())
+    gastosGenerales = crearIndiceGastosGenerales(getGastosGenerales())
     datos = seleccionarDatos(ws)
-    valores = [(egresos[dato[0]][0], locales[dato[1]][0], dato[2]) for dato in datos]
+    valores = [(gastosGenerales[dato[0]][0], locales[dato[1]][0], dato[2]) for dato in datos]
     db = crearConeccion()
     cursor = db.cursor()
-    insStr = '''INSERT OR REPLACE INTO loc_egresos_no_locales (
-                            idEgreso,
+    insStr = '''INSERT OR REPLACE INTO loc_gastos_no_locales (
+                            idgastoGeneral,
                             idLocal,
                             estado)
                         VALUES(?, ?, ?)'''
@@ -283,10 +300,10 @@ def cargaDatosIniciales():
             carga_igPerfiles(wb[ws.title])
         elif ws.title == 'ig_perfilesPersonasLocales':
             carga_igPerfilesPersonasLocal(wb[ws.title])
-        elif ws.title == 'loc_egresos':
-            carga_locEgresos(wb[ws.title])
-        elif ws.title == 'loc_egresosNoLocales':
-            carga_locEgresosNoLocales(wb[ws.title])
+        elif ws.title == 'loc_gastosGenerales':
+            carga_locGastosGenerales(wb[ws.title])
+        elif ws.title == 'loc_gastosNoLocales':
+            carga_locGastosNoLocales(wb[ws.title])
         elif ws.title == 'loc_formasPagos':
             carga_locFormasPagos(wb[ws.title])
         elif ws.title == 'loc_cortesías':

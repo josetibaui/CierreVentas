@@ -36,7 +36,6 @@ VALUES (
     0
 );
 
-
 CREATE TABLE ig_locales (
   idLocal INTEGER PRIMARY KEY,
   codLocal INTEGER NOT NULL,
@@ -72,7 +71,6 @@ CREATE TABLE IF NOT EXISTS ig_perfiles(
 );
 CREATE UNIQUE INDEX ig_perfiles_UK ON ig_perfiles(perfil);
 
-
 CREATE TABLE IF NOT EXISTS ig_perfiles_personas_locales(
   idPerfilPersonaLocal INTEGER PRIMARY KEY,
   idPerfil INTEGER NOT NULL,
@@ -84,6 +82,68 @@ CREATE TABLE IF NOT EXISTS ig_perfiles_personas_locales(
   FOREIGN KEY(idLocal) REFERENCES ig_locales (idLocal) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 CREATE UNIQUE INDEX ig_personasLocalPerfiles_UK ON ig_perfiles_personas_locales(idPerfil, idPersona, idLocal);
+
+
+REATE TABLE IF NOT EXISTS loc_formasPagos(
+  idFormaPago INTEGER  PRIMARY KEY,
+  formaPago TEXT NOT NULL,
+  cuentaContabilidad TEXT,
+  estado TEXT NOT NULL
+);
+CREATE UNIQUE INDEX locFormaPagos_UK ON loc_formasPagos (formaPago);
+
+CREATE TABLE IF NOT EXISTS loc_cortesias(
+  idCortesia INTEGER  PRIMARY KEY,
+  cortesia TEXT NOT NULL,
+  cuentaContabilidad TEXT,
+  estado TEXT NOT NULL
+);
+CREATE UNIQUE INDEX locCortesias_UK ON loc_cortesias(cortesia);
+
+CREATE TABLE IF NOT EXISTS loc_gastosGenerales (
+  idGastoGeneral INTEGER  PRIMARY KEY,
+  gastoGeneral TEXT NOT NULL,
+  cuentaContabilidad TEXT,
+  estado TEXT NOT NULL
+);
+CREATE UNIQUE INDEX locGastosGenerales_UK ON loc_gastosGenerales (gastoGeneral);
+
+CREATE TABLE IF NOT EXISTS loc_gastos_no_locales (
+  idGastoNoLocal INTEGER PRIMARY KEY,
+  idGastoGeneral INTEGER NOT NULL,
+  idLocal INTEGER NOT NULL,
+  estado INTEGER NOT NULL,
+  FOREIGN KEY (idGastoGeneral) REFERENCES loc_gastosGenerales (idGastoGeneral) ON UPDATE CASCADE ON DELETE RESTRICT,
+  FOREIGN KEY (idLocal) REFERENCES ig_locales (idLocal) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+CREATE UNIQUE INDEX loc_gastoNoLocales_UK ON loc_gasto_no_locales(idLocal,idGastoNoLocal);
+
+CREATE TABLE IF NOT EXISTS loc_pagosPersonal (
+  idPagoPersonal INTEGER PRIMARY KEY,
+  tipoPago TEXT NOT NULL,
+  cuentaContabilidad TEXT,
+  estado TEXT NOT NULL
+);
+CREATE UNIQUE INDEX locPagosPersonal_UK ON loc_pagosPersonal (tipoPago);
+
+CREATE TABLE IF NOT EXISTS ba_bancos (
+  idBanco INTEGER PRIMARY KEY,
+  banco TEXT NOT NULL,
+  cuentaContabilidad TEXT,
+  estado INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX banBanco_UK ON ba_bancos (banco);
+
+CREATE TABLE IF NOT EXISTS loc_cierreVentas (
+  idCierreVentas INTEGER PRIMARY KEY,
+  idLocal INTEGER NOT NULL,
+  fecha TEXT NOT NULL,
+  data text NOT NULL,
+  idPor INTEGER NOT NULL,
+  FOREIGN KEY (idLocal) REFERENCES ig_locales (idLocal) ON DELETE RESTRICT ON UPDATE CASCADE,
+  FOREIGN KEY (idPor) REFERENCES ig_personas (idPersona) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+CREATE UNIQUE INDEX locCierreVentas_locFecha_UK ON loc_cierreVentas (idLocal,fecha);
 
 CREATE TABLE IF NOT EXISTS ig_log (
   idLog INTEGER  PRIMARY KEY,
@@ -98,72 +158,6 @@ CREATE INDEX igLog_persona_FK_idx ON ig_log(idPersona);
 CREATE INDEX igLog_tablafechaHora_IDX ON ig_log(tabla,fechaHora);
 CREATE INDEX igLog_tablaPersonaFecha_IDX ON ig_log(tabla,idPersona,fechaHora);
 
-
-CREATE TABLE IF NOT EXISTS loc_egresos (
-  idLocEgreso INTEGER  PRIMARY KEY,
-  egreso TEXT NOT NULL,
-  cuentaContabilidad TEXT,
-  estado TEXT NOT NULL
-);
-CREATE UNIQUE INDEX locEgresos_UK ON loc_egresos (egreso);
-
-
-CREATE TABLE IF NOT EXISTS loc_egresos_no_locales (
-  idEgresoNoLocal INTEGER PRIMARY KEY,
-  idEgreso INTEGER NOT NULL,
-  idLocal INTEGER NOT NULL,
-  estado INTEGER NOT NULL,
-  FOREIGN KEY (idEgreso) REFERENCES loc_egresos (idLocEgreso) ON UPDATE CASCADE ON DELETE RESTRICT,
-  FOREIGN KEY (idLocal) REFERENCES ig_locales (idLocal) ON DELETE RESTRICT ON UPDATE CASCADE
-);
-CREATE UNIQUE INDEX loc_egresoNoLocal_UK ON loc_egresos_no_locales(idLocal,idEgreso);
-
-
-CREATE TABLE IF NOT EXISTS loc_formasPagos(
-  idFormaPago INTEGER  PRIMARY KEY,
-  formaPago TEXT NOT NULL,
-  cuentaContabilidad TEXT,
-  estado TEXT NOT NULL
-);
-CREATE UNIQUE INDEX locFormaPagos_UK ON loc_formasPagos (formaPago);
-
-
-CREATE TABLE IF NOT EXISTS loc_cortesias(
-  idCortesia INTEGER  PRIMARY KEY,
-  cortesia TEXT NOT NULL,
-  cuentaContabilidad TEXT,
-  estado TEXT NOT NULL
-);
-CREATE UNIQUE INDEX locCortesias_UK ON loc_cortesias(cortesia);
-
-CREATE TABLE IF NOT EXISTS loc_pagosPersonal (
-  idPagoPersonal INTEGER PRIMARY KEY,
-  tipoPago TEXT NOT NULL,
-  cuentaContabilidad TEXT,
-  estado TEXT NOT NULL
-);
-CREATE UNIQUE INDEX locPagosPersonal_UK ON loc_pagosPersonal (tipoPago);
-
-
-CREATE TABLE IF NOT EXISTS ba_bancos (
-  idBanco INTEGER PRIMARY KEY,
-  banco TEXT NOT NULL,
-  cuentaContabilidad TEXT,
-  estado INTEGER NOT NULL
-);
-CREATE UNIQUE INDEX banBanco_UK ON ba_bancos (banco);
-
-
-CREATE TABLE IF NOT EXISTS loc_cierreVentas (
-  idCierreVentas INTEGER PRIMARY KEY,
-  idLocal INTEGER NOT NULL,
-  fecha TEXT NOT NULL,
-  data text NOT NULL,
-  idPor INTEGER NOT NULL,
-  FOREIGN KEY (idLocal) REFERENCES ig_locales (idLocal) ON DELETE RESTRICT ON UPDATE CASCADE,
-  FOREIGN KEY (idPor) REFERENCES ig_personas (idPersona) ON DELETE RESTRICT ON UPDATE CASCADE
-);
-CREATE UNIQUE INDEX locCierreVentas_locFecha_UK ON loc_cierreVentas (idLocal,fecha);
 
 CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVentas
   BEGIN

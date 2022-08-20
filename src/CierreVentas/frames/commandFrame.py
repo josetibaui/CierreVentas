@@ -22,7 +22,7 @@ class CommandFrame(ttk.Frame):
             'ventasButton': ttk.Button(self, text='Ventas', command=lambda:self.cambiarFrame('ventasFrame')),
             'formasPagoButton': ttk.Button(self, text='Formas de Pago', command=lambda:self.cambiarFrame('formasPagosFrame')),
             'gastosGeneralesButton': ttk.Button(self, text='Gastos Generales', command=lambda:self.cambiarFrame('gastosGeneralesFrame')),
-            'gastosPersonalButton': ttk.Button(self, text='Gastos de Personal', command=lambda:self.cambiarFrame('gastosPersonalFrame')),
+            'pagosPersonalButton': ttk.Button(self, text='Pagos al Personal', command=lambda:self.cambiarFrame('pagosPersonalFrame')),
             'depositosButton': ttk.Button(self, text='Depósitos', command=lambda:self.cambiarFrame('depositosFrame')),
             'salirButton': ttk.Button(self, text='Salir', command=lambda:self.rw.cerrarAplicacion()),
         }

@@ -235,18 +235,32 @@ class Personas():
         self.cursor.execute(selStr, (login,))
         return self.cursor.fetchone()
 
-    def queryBylocal(self, codLocal, estado=1):
+    def queryByCodLocal(self, codLocal, estado=1):
         if codLocal == None:
             return None
 
         selStr = 'SELECT pe.* FROM ig_personas AS pe, ig_personas_locales AS pl, ig_locales AS loc'
-        whereStr = f'WHERE pl.idPersona = pe.idpersona AND pl.idLocal = loc.idLocal AND loc.codlocal = ?'
+        whereStr = f'WHERE pl.idPersona = pe.idpersona AND pl.idLocal = loc.idLocal AND loc.codLocal = ?'
         if estado == 1:
             whereStr=whereStr + f' AND pe.estado = 1 AND pl.estado = 1 and loc.estado = 1'
         orderStr = 'ORDER BY apellidos, nombres'
 
         selStr = f'{selStr} {whereStr} {orderStr}'
         self.cursor.execute(selStr, (codLocal,))
+        return self.cursor.fetchall()
+
+    def queryByIdLocal(self, idLocal, estado=1):
+        if idLocal == None:
+            return None
+
+        selStr = 'SELECT pe.* FROM ig_personas AS pe, ig_personas_locales AS pl, ig_locales AS loc'
+        whereStr = f'WHERE pl.idPersona = pe.idpersona AND pl.idLocal = loc.idLocal AND loc.idLocal = ?'
+        if estado == 1:
+            whereStr=whereStr + f' AND pe.estado = 1 AND pl.estado = 1 and loc.estado = 1'
+        orderStr = 'ORDER BY apellidos, nombres'
+
+        selStr = f'{selStr} {whereStr} {orderStr}'
+        self.cursor.execute(selStr, (idLocal,))
         return self.cursor.fetchall()
 
 

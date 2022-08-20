@@ -1,4 +1,4 @@
-import DBConnection
+import modelo.DBConnection as DBConnection
 
 class Bancos():
 
@@ -13,9 +13,9 @@ class Bancos():
 
     def bancosValues(self):
         return [
-            _banco,
-            _cuentaContabilidad,
-            _estado
+            self._banco,
+            self._cuentaContabilidad,
+            self._estado
         ]
 
     def insert(self):

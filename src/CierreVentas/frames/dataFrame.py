@@ -5,9 +5,9 @@ from CierreVentas.frames import resumenFrame
 from CierreVentas.frames import ventasFrame
 from CierreVentas.frames import formasPagosFrame
 from CierreVentas.frames import gastosGeneralesFrame
-from CierreVentas.frames import gastosPersonalFrame
+from CierreVentas.frames import pagosPersonalFrame
 from CierreVentas.frames import depositosFrame
-from CierreVentas.frames import loginFrame
+from CierreVentas.frames import blankFrame
 
 class DataFrame(ttk.Frame):
     def __init__(self, rootWindow, headerFrame, commandFrame):
@@ -31,14 +31,13 @@ class DataFrame(ttk.Frame):
             'resumenFrame': resumenFrame.ResumenFrame(self),
             'formasPagosFrame': formasPagosFrame.FormasPagosFrame(self),
             'gastosGeneralesFrame': gastosGeneralesFrame.GastosGeneralesFrame(self),
-            'gastosPersonalFrame': gastosPersonalFrame.GastosPersonalFrame(self),
+            'pagosPersonalFrame': pagosPersonalFrame.PagosPersonalFrame(self),
             'depositosFrame': depositosFrame.DepositosFrame(self),
+            'blankFrame': blankFrame.BlankFrame(self)
         }    
-            
 
-        # self.cambiarFrame('resumenFrame')
         self.cambiarFrame('loginFrame')
-        self.dataFrames['loginFrame'].usuarioEntry.focus()
+        # self.dataFrames['loginFrame'].usuarioEntry.focus()
 
     def gridConfigure(self, subFrame):
         subFrame.columnconfigure(0, weight=1)
@@ -61,13 +60,15 @@ class DataFrame(ttk.Frame):
 
     def cambiarFrame(self, destino):
         self.dataFrames[destino].tkraise()
+        if destino == 'loginFrame':
+            self.dataFrames['loginFrame'].usuarioEntry.focus()
         if destino == 'ventasFrame':
-            self.dataFrames[destino].ventasEntry.focus()
+            self.dataFrames['ventasFrame'].ventasEntry.focus()
         elif destino == 'formasPagosFrame':
-            self.dataFrames[destino].formasPagosCombo.focus()
+            self.dataFrames['formasPagosFrame'].formasPagosCombo.focus()
         elif destino == 'gastosGeneralesFrame':
-            self.dataFrames[destino].tipoGastoGeneralCombo.focus()
-        # elif destino == 'gastosPersonalFrame':
-        #     self.dataFrames[destino].formasPagosCombo.focus()
+            self.dataFrames['gastosGeneralesFrame'].tipoGastoGeneralCombo.focus()
+        elif destino == 'pagosPersonalFrame':
+            self.dataFrames['pagosPersonalFrame'].empleadoCombo.focus()
         # elif destino == 'depositosFrame':
         #     self.dataFrames[destino].formasPagosCombo.focus()
