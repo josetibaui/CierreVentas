@@ -148,6 +148,7 @@ CREATE UNIQUE INDEX locCierreVentas_locFecha_UK ON loc_cierreVentas (idLocal,fec
 CREATE TABLE IF NOT EXISTS ig_log (
   idLog INTEGER  PRIMARY KEY,
   tabla TEXT NOT NULL,
+  idTabla INTEGER,
   idPersona INTEGER NOT NULL,
   fechaHora TEXT NOT NULL,
   preCondicion TEXT,
@@ -155,5 +156,6 @@ CREATE TABLE IF NOT EXISTS ig_log (
   FOREIGN KEY (idPersona) REFERENCES ig_personas (idPersona) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 CREATE INDEX igLog_persona_FK_idx ON ig_log(idPersona);
+CREATE INDEx igLog_tablaIdTable_IDX ON ig_log(tabla, idTabla);
 CREATE INDEX igLog_tablafechaHora_IDX ON ig_log(tabla,fechaHora);
 CREATE INDEX igLog_tablaPersonaFecha_IDX ON ig_log(tabla,idPersona,fechaHora);

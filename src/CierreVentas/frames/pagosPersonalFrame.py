@@ -46,20 +46,18 @@ class PagosPersonalFrame(ttk.Frame):
         personas = Personas()
         listaPersonasLocal = personas.queryByIdLocal(self.df.rw.esteLocal[0])
         listaPersonasEmpresa = personas.queryAll()
-        empleadoCombo = ttk.Combobox(self)
-        # empleadoCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasLocal] 
         
-
+        self.empleadosCombo = ttk.Combobox(self)
         listaSeleccionada = tk.StringVar()
         listaSeleccionada.set('L')
         def setListaPersonas():
             if listaSeleccionada.get() == 'L':
-                empleadoCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasLocal]
+                self.empleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasLocal]
             else:
-                empleadoCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasEmpresa]
+                self.empleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasEmpresa]
         setListaPersonas()
-        empleadoCombo['state'] = 'readonly'
-        empleadoCombo.grid(row=3, column=0)
+        self.empleadosCombo['state'] = 'readonly'
+        self.empleadosCombo.grid(row=3, column=0)
 
         pagosPersonal = PagosPersonal()
         listaPagosPersonal= pagosPersonal.queryAll()

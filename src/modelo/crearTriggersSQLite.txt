@@ -3,6 +3,7 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVent
     INSERT INTO ig_log VALUES(
         0, 
         'loc_cierreVentas',
+        new.idCierreVentas,
         new.idPor,
         datetime('now'),
         NULL,
@@ -19,6 +20,7 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_upd AFTER UPDATE ON loc_cierreVent
     INSERT INTO ig_log VALUES(
         0, 
         'loc_cierreVentas',
+        new.idCierreVentas,
         new.idPor,
         datetime('now'),
         old.idCierreVentas || '|' ||
@@ -39,6 +41,7 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_del AFTER DELETE ON loc_cierreVent
     INSERT INTO ig_log VALUES(
         0, 
         'loc_cierreVentas',
+        old.idCierreVentas,
         old.idPor,
         datetime('now'),
         old.idCierreVentas || '|' ||

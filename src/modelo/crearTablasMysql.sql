@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS ig_personas (
-  idPersona INTEGER PRIMARY KEY,
-  nombres TEXT NOT NULL,
-  apellidos TEXT NOT NULL,
-  tipoIdentificacion TEXT NOT NULL,
-  identificacion TEXT NOT NULL,
-  codigoNomina TEXT,
-  email TEXT,
-  login TEXT,
-  password TEXT,
-  estado INTEGER
+  idPersona INTEGER UNSIGNED AUTOINCREMENT PRIMARY KEY,
+  nombres VARCHAR(255) NOT NULL,
+  apellidos VARCHAR(255) NOT NULL,
+  tipoIdentificacion VARCHAR(8) NOT NULL,
+  identificacion VARCHAR(32) NOT NULL,
+  codigoNomina VARCHAR(32),
+  email VARCHAR(255),
+  login VARCHAR(255),
+  password VARCHAR(255),
+  estado SMALLINT NOT NULL DEFAULT 1
 );
 CREATE UNIQUE INDEX ig_persona_nombreApellidos_UK ON ig_personas(nombres,apellidos);
 CREATE UNIQUE INDEX ig_persona_identificacion_UK ON ig_personas(tipoIdentificacion,identificacion);
@@ -37,42 +37,42 @@ VALUES (
 );
 
 CREATE TABLE ig_locales (
-  idLocal INTEGER PRIMARY KEY,
-  codLocal INTEGER NOT NULL,
-  local TEXT NOT NULL,
-  alias TEXT,
-  tipo TEXT NOT NULL,
-  ciudad TEXT NOT NULL,
-  direccion TEXT NOT NULL,
-  referencia TEXT,
-  codigoArea TEXT,
-  telefono TEXT NOT NULL,
-  codigoPostal TEXT,
-  estado INTEGER  NOT NULL
+  idLocal INTEGER UNSIGNED PRIMARY KEY,
+  codLocal INTEGER UNSIGNED NOT NULL,
+  local VARCHAR(255) NOT NULL,
+  alias VARCHAR(255),
+  tipo VARCHAR(4) NOT NULL,
+  ciudad VARCHAR(255) NOT NULL,
+  direccion VARCHAR(255) NOT NULL,
+  referencia VARCHAR(255),
+  codigoArea VARCHAR(32),
+  telefono VARCHAR(64) NOT NULL,
+  codigoPostal VARCHAR(32),
+  estado SMALLINT NOT NULL DEFAULT 1
 );
 CREATE UNIQUE INDEX ig_locales_codLocal_UK on ig_locales(codLocal);
 CREATE UNIQUE INDEX ig_localesLocal_UK on ig_locales(local);
 
 
 CREATE TABLE IF NOT EXISTS ig_personas_locales(
-    idPersonaLocal INTEGER  PRIMARY KEY,
-    idPersona INTEGER NOT NULL,
-    idLocal INTEGER NOT NULL,
-    estado INTEGER NOT NULL,
+    idPersonaLocal INTEGER UNSIGNED PRIMARY KEY,
+    idPersona INTEGER UNSIGNED NOT NULL,
+    idLocal INTEGER UNSIGNED NOT NULL,
+    estado SMALLINT NOT NULL DEFAULT 1,
     FOREIGN KEY (idPersona) REFERENCES ig_personas (idPersona) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY(idLocal) REFERENCES ig_locales (idLocal) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 CREATE UNIQUE INDEX pe_personaLocal_UK ON ig_personas_locales(idpersona, idLocal);
 
 CREATE TABLE IF NOT EXISTS ig_perfiles(
-    idPerfil INTEGER PRIMARY KEY,
+    idPerfil INTEGER UNSIGNED PRIMARY KEY,
     perfil TEXT NOT NULL,
     estado INTEGER NOT NULL
 );
 CREATE UNIQUE INDEX ig_perfiles_UK ON ig_perfiles(perfil);
 
 CREATE TABLE IF NOT EXISTS ig_perfiles_personas_locales(
-  idPerfilPersonaLocal INTEGER PRIMARY KEY,
+  idPerfilPersonaLocal INTEGER UNSIGNED PRIMARY KEY,
   idPerfil INTEGER NOT NULL,
   idPersona INTEGER NOT NULL,
   idLocal INTEGER NOT NULL,
@@ -85,7 +85,7 @@ CREATE UNIQUE INDEX ig_personasLocalPerfiles_UK ON ig_perfiles_personas_locales(
 
 
 REATE TABLE IF NOT EXISTS loc_formasPagos(
-  idFormaPago INTEGER  PRIMARY KEY,
+  idFormaPago INTEGER  UNSIGNED PRIMARY KEY,
   formaPago TEXT NOT NULL,
   cuentaContabilidad TEXT,
   estado TEXT NOT NULL
@@ -93,7 +93,7 @@ REATE TABLE IF NOT EXISTS loc_formasPagos(
 CREATE UNIQUE INDEX locFormaPagos_UK ON loc_formasPagos (formaPago);
 
 CREATE TABLE IF NOT EXISTS loc_cortesias(
-  idCortesia INTEGER  PRIMARY KEY,
+  idCortesia INTEGER  UNSIGNED PRIMARY KEY,
   cortesia TEXT NOT NULL,
   cuentaContabilidad TEXT,
   estado TEXT NOT NULL
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS loc_cortesias(
 CREATE UNIQUE INDEX locCortesias_UK ON loc_cortesias(cortesia);
 
 CREATE TABLE IF NOT EXISTS loc_gastosGenerales (
-  idGastoGeneral INTEGER  PRIMARY KEY,
+  idGastoGeneral INTEGER  UNSIGNED PRIMARY KEY,
   gastoGeneral TEXT NOT NULL,
   cuentaContabilidad TEXT,
   estado TEXT NOT NULL
@@ -109,9 +109,9 @@ CREATE TABLE IF NOT EXISTS loc_gastosGenerales (
 CREATE UNIQUE INDEX locGastosGenerales_UK ON loc_gastosGenerales (gastoGeneral);
 
 CREATE TABLE IF NOT EXISTS loc_gastos_no_locales (
-  idGastoNoLocal INTEGER PRIMARY KEY,
-  idGastoGeneral INTEGER NOT NULL,
-  idLocal INTEGER NOT NULL,
+  idGastoNoLocal INTEGER  UNSIGNED PRIMARY KEY,
+  idGastoGeneral INTEGER  UNSIGNED NOT NULL,
+  idLocal INTEGER UNSIGNED NOT NULL,
   estado INTEGER NOT NULL,
   FOREIGN KEY (idGastoGeneral) REFERENCES loc_gastosGenerales (idGastoGeneral) ON UPDATE CASCADE ON DELETE RESTRICT,
   FOREIGN KEY (idLocal) REFERENCES ig_locales (idLocal) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS loc_gastos_no_locales (
 CREATE UNIQUE INDEX loc_gastoNoLocales_UK ON loc_gasto_no_locales(idLocal,idGastoNoLocal);
 
 CREATE TABLE IF NOT EXISTS loc_pagosPersonal (
-  idPagoPersonal INTEGER PRIMARY KEY,
+  idPagoPersonal INTEGER  UNSIGNED PRIMARY KEY,
   tipoPago TEXT NOT NULL,
   cuentaContabilidad TEXT,
   estado TEXT NOT NULL
@@ -127,15 +127,15 @@ CREATE TABLE IF NOT EXISTS loc_pagosPersonal (
 CREATE UNIQUE INDEX locPagosPersonal_UK ON loc_pagosPersonal (tipoPago);
 
 CREATE TABLE IF NOT EXISTS ba_bancos (
-  idBanco INTEGER PRIMARY KEY,
+  idBanco INTEGER UNSIGNED PRIMARY KEY,
   banco TEXT NOT NULL,
   cuentaContabilidad TEXT,
   estado INTEGER NOT NULL
 );
 CREATE UNIQUE INDEX banBanco_UK ON ba_bancos (banco);
 
-CREATE TABLE IF NOT EXISTS loc_cierreVentas (
-  idCierreVentas INTEGER PRIMARY KEY,
+/* CREATE TABLE IF NOT EXISTS loc_cierreVentas (
+  idCierreVentas INTEGER UNSIGNED PRIMARY KEY,
   idLocal INTEGER NOT NULL,
   fecha TEXT NOT NULL,
   data text NOT NULL,
@@ -143,27 +143,30 @@ CREATE TABLE IF NOT EXISTS loc_cierreVentas (
   FOREIGN KEY (idLocal) REFERENCES ig_locales (idLocal) ON DELETE RESTRICT ON UPDATE CASCADE,
   FOREIGN KEY (idPor) REFERENCES ig_personas (idPersona) ON DELETE RESTRICT ON UPDATE CASCADE
 );
-CREATE UNIQUE INDEX locCierreVentas_locFecha_UK ON loc_cierreVentas (idLocal,fecha);
+CREATE UNIQUE INDEX locCierreVentas_locFecha_UK ON loc_cierreVentas (idLocal,fecha); */
 
 CREATE TABLE IF NOT EXISTS ig_log (
-  idLog INTEGER  PRIMARY KEY,
+  idLog INTEGER UNSIGNED  PRIMARY KEY,
   tabla TEXT NOT NULL,
-  idPersona INTEGER NOT NULL,
+  idTabla INTEGER UNSIGNED,
+  idPersona INTEGER UNSIGNED NOT NULL,
   fechaHora TEXT NOT NULL,
   preCondicion TEXT,
   postCondicion TEXT,
   FOREIGN KEY (idPersona) REFERENCES ig_personas (idPersona) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 CREATE INDEX igLog_persona_FK_idx ON ig_log(idPersona);
+CREATE INDEx igLog_tablaIdTable_IDX ON ig_log(tabla, idTabla);
 CREATE INDEX igLog_tablafechaHora_IDX ON ig_log(tabla,fechaHora);
 CREATE INDEX igLog_tablaPersonaFecha_IDX ON ig_log(tabla,idPersona,fechaHora);
 
 
-CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVentas
+/* CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVentas
   BEGIN
     INSERT INTO ig_log VALUES(
         0, 
         'loc_cierreVentas',
+        new.idCierreVentas,
         new.idPor,
         datetime('now'),
         NULL,
@@ -180,6 +183,7 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_upd AFTER UPDATE ON loc_cierreVent
     INSERT INTO ig_log VALUES(
         0, 
         'loc_cierreVentas',
+        new.idCierreVentas,
         new.idPor,
         datetime('now'),
         old.idCierreVentas || '|' ||
@@ -200,6 +204,7 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_del AFTER DELETE ON loc_cierreVent
     INSERT INTO ig_log VALUES(
         0, 
         'loc_cierreVentas',
+        old.idCierreVentas,
         old.idPor,
         datetime('now'),
         old.idCierreVentas || '|' ||
@@ -209,7 +214,7 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_del AFTER DELETE ON loc_cierreVent
             old.idPor,
         NULL
     )
-  END;
+  END; */
   
 
 Las siguientes tablas son las que se usan en la base de datos  central
