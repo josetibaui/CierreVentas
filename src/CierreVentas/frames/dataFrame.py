@@ -67,7 +67,7 @@ class DataFrame(ttk.Frame):
         elif destino == 'formasPagosFrame':
             self.dataFrames['formasPagosFrame'].formaPagoTipoCombo.focus()
         elif destino == 'gastosGeneralesFrame':
-            self.dataFrames['gastosGeneralesFrame'].tipoGastoGeneralCombo.focus()
+            self.dataFrames['gastosGeneralesFrame'].gastoGeneralTipoCombo.focus()
         elif destino == 'pagosPersonalFrame':
             self.dataFrames['pagosPersonalFrame'].empleadosCombo.focus()
         elif destino == 'depositosFrame':

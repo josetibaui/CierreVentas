@@ -3,11 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import *
 from modelo.locCortesias import Cortesias  as Cortesias
-from decimal import Decimal
-from decimal import *
-
-
-
+from decimal import Decimal, InvalidOperation
 
 
 class VentasFrame(ttk.Frame):
@@ -37,7 +33,6 @@ class VentasFrame(ttk.Frame):
 
 #------------------- Ventas -------------------------------------------
     def validateVentas(self, entrada):
-        getcontext().prec =  2
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
@@ -59,7 +54,6 @@ class VentasFrame(ttk.Frame):
 
 # --------------------------Anulaciones----------------------------------------------------
     def validateAnulaciones(self, entrada):
-        getcontext().prec =  2
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
@@ -81,7 +75,6 @@ class VentasFrame(ttk.Frame):
 
 #-----------------------------------Devoluciones -------------------------------------------------
     def validateDevoluciones(self, entrada):
-        getcontext().prec =  2
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
@@ -116,7 +109,6 @@ class VentasFrame(ttk.Frame):
 
 #------------------------------Valor de la cortesia -------------------------------------------
     def validateCortesiaValor(self, entrada):
-        getcontext().prec =  2
         if entrada == None or entrada == '':
             entrada = 0.00
         try:

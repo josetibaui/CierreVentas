@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import *
 from modelo.locFormasPagos import FormasPagos as FormasPagos
-from decimal import Decimal
-from decimal import *
+from decimal import Decimal, InvalidOperation
 
 class FormasPagosFrame(ttk.Frame):
     def __init__(self, dataFrame):
@@ -46,7 +45,6 @@ class FormasPagosFrame(ttk.Frame):
 
 #----------------------------Forma Pagos valor ------------------
     def validateFormaPagoValor(self, entrada):
-        getcontext().prec =  2
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
@@ -184,7 +182,7 @@ class FormasPagosFrame(ttk.Frame):
 
 # --------------------------- Formas de pago tree widget
         columnasFormasPago = ('tipoFormasPago', 'valor', 'observacion')
-        self.formasPagosTree = ttk.Treeview(self, columns=columnasFormasPago, show='headings')
+        self.formasPagosTree = ttk.Treeview(self, columns=columnasFormasPago, show='headings', selectmode='browse')
         self.formasPagosTree.heading('tipoFormasPago', text='Formas de Pago')
         self.formasPagosTree.heading('valor', text='Valores')
         self.formasPagosTree.heading('observacion', text='Observaciones')
