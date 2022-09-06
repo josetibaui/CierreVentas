@@ -81,7 +81,7 @@ class CierreVentas():
     
     def queryByLocalFecha(self, idLocal, fecha):
         selStr = 'SELECT * FROM loc_cierreVentas WHERE idLocal = ? AND fecha = ?'
-        self.cursor.execute(selStr, (idCierreVentas))
+        self.cursor.execute(selStr, (idLocal, fecha))
         return self.cursor.fetchone()
 
     def crearDataStructure():
@@ -92,7 +92,9 @@ class CierreVentas():
                 'Devoluciones' : 0.00,
                 'Diferencia': 0.00,
                 'Cortesias' : [] },
-            'FormasPagos' : [],
+            'FormasPagos' : {
+                'Efectivo' : 0.00,
+                'FormasPagos': [] },
             'Egresos': [],
             'PagosPersonal' : [],
             'Depositos' : []
