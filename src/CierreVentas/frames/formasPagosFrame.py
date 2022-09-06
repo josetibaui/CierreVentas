@@ -82,7 +82,6 @@ class FormasPagosFrame(ttk.Frame):
         elif not(formaPagoTipo):
             return False
         else:
-            print('Return. Entra a cargar treeview')
             self.formasPagosTree.insert('', tk.END, 
                             values=(formaPagoTipo,
                                     formaPagoValor,

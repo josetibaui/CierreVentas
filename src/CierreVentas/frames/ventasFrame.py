@@ -148,7 +148,7 @@ class VentasFrame(ttk.Frame):
             self.cortesiaTipoValue.set('')
             self.cortesiaValorEntryValue.set('')
             self.cortesiaObservacionValue.set('')
-            return True
+            return Trgit branchue
         elif not(cortesiaTipo):
             return False
         else:
@@ -172,7 +172,6 @@ class VentasFrame(ttk.Frame):
     def cortesiasTreeItemSelected(self, event):
         for idItem in  self.cortesiasTree.selection():
             item = self.cortesiasTree.item(idItem)
-            print(item)
             self.cortesiaTipoValue.set(item['values'][0])
             self.cortesiaValorEntryValue.set(item['values'][1])
             self.cortesiaObservacionValue.set(item['values'][2])
