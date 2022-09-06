@@ -148,7 +148,7 @@ class VentasFrame(ttk.Frame):
             self.cortesiaTipoValue.set('')
             self.cortesiaValorEntryValue.set('')
             self.cortesiaObservacionValue.set('')
-            return Trgit branchue
+            return True
         elif not(cortesiaTipo):
             return False
         else:

@@ -83,7 +83,7 @@ class LoginFrame(ttk.Frame):
                 if nombre != 'salirButton':
                     boton.state(['!disabled'])
             self.hf.crearIdentWidgets(self.df.rw.esteLocal, user)
-            self.df.cambiarFrame('formasPagosFrame')
+            self.df.cambiarFrame('gastosGeneralesFrame')
             self.destroy()
 
     def initFocus(self):
