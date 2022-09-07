@@ -154,7 +154,7 @@ class FormasPagosFrame(ttk.Frame):
         formaPagoValorLabel.grid(row=2,column=2, **labelsColumnsOptions)
 
         formaPagoValorEntryValid = (self.register(self.validateFormaPagoValor), '%P')
-        formaPagoValorEntryInvalid = (self.register(self.inValidateFormaPagoValor))
+        formaPagoValorEntryInvalid = (self.register(self.inValidateFormaPagoValor),)
         self.formaPagoValorValue = tk.StringVar()
         self.formaPagoValorEntry = ttk.Entry(self,
                                         textvariable=self.formaPagoValorValue,
@@ -165,7 +165,6 @@ class FormasPagosFrame(ttk.Frame):
                                         invalidcommand=formaPagoValorEntryInvalid)
         self.formaPagoValorEntry.bind('<Return>', self.formaPagoValorEntryReturn)
         self.formaPagoValorEntry.bind('<KP_Enter>', self.formaPagoValorEntryReturn)
-
 
 # -------------------------- Descripción de la froma de pago widget-------------------- 
         formaPagoDescripcionLabel = ttk.Label(self, text='Obervaciones')

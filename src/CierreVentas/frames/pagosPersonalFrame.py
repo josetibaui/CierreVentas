@@ -66,7 +66,7 @@ class PagosPersonalFrame(ttk.Frame):
             self.pagoPersonalValorValue.set('')
             self.pagoPersonalObservacionValue.set('')
             return True
-        elif not(pagoPersonalTipo):
+        elif not(pagoPersonalTipo or pagoPersonalEmpleado):
             return False
         else:
             self.pagosPersonalTree.insert('', tk.END, 
