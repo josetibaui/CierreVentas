@@ -81,7 +81,6 @@ class App(tk.Tk):
 
     def cambiarFrames(self, destino):
         self.mainFrames['dataFrame'].cambiarFrame(destino)
-        # dataFrame.cambiarFrame(destino)
 
 if __name__ == '__main__':
     app = App()

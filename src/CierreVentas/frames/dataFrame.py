@@ -37,7 +37,6 @@ class DataFrame(ttk.Frame):
         }    
 
         self.cambiarFrame('loginFrame')
-        # self.dataFrames['loginFrame'].usuarioEntry.focus()
 
     def gridConfigure(self, subFrame):
         subFrame.columnconfigure(0, weight=1)
