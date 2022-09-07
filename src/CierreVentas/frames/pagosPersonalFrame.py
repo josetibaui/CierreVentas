@@ -1,18 +1,105 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import *
 from modelo.locPagosPersonal import PagosPersonal
 from modelo.igPersonas import Personas
+from decimal import Decimal, InvalidOperation
+
 
 class PagosPersonalFrame(ttk.Frame):
     def __init__(self, dataFrame):
         super().__init__(dataFrame)
 
         self.df = dataFrame
-        
         self.grid(row=0, column=0, sticky='nsew')
 
-        # dataFrame.gridConfigure(self)
+        dataFrame.gridConfigure(self)
         self.crearWidgets()
+        self.pagoPersonalEmpleadosCombo.focus()
+
+        self.bind('<Enter>', self.pagosPersonalFrameEnter)
+        self.bind('<Leave>', self.pagosPersonalFrameExit)
+
+#-----------------------------Entrada-----------------------------------
+    def pagosPersonalFrameEnter(self, event):
+        pass
+#-----------------------------Salida------------------------------------
+    def pagosPersonalFrameExit(self, event):
+        pass
+
+# --------------------------------Lista de empleados -------------------------
+
+# --------------------------- Tipo de Pago ----------------------------------------
+    def validatePagoPersonalValor(self, entrada):
+        if entrada == None or entrada == '':
+            entrada = 0.00
+        try:
+            valor = Decimal(entrada)
+            self.pagoPersonalValorValue.set(entrada)
+            return True
+        except InvalidOperation:
+            self.pagoPersonalValorValue.set('')
+            return False
+
+    def inValidatePagoPersonalValor(self):
+        showerror(title='Error', message='Se debe ingresar un valor')
+        self.pagoPersonalValorValue.set('')
+        self.pagoPersonalValorEntry.focus()
+
+    def pagoPersonalValorEntryReturn(self, event):
+        self.pagoPersonalObservacionEntry.focus()
+# ---------------------------------Valor del pago -------------------------------
+
+# --------------------------------Observaciones-------------------------------
+    def validatePagoPersonalObservacion(self):
+        pagoPersonalEmpleado = self.pagoPersonalEmpleadoValue.get()
+        pagoPersonalTipo = self.pagoPersonalTipoValue.get()
+        pagoPersonalObservacion = self.pagoPersonalObservacionValue.get()
+        try:
+            pagoPersonalValor = Decimal(self.pagoPersonalValorValue.get())
+        except InvalidOperation:
+            pagoPersonalValor = 0
+
+        if(pagoPersonalValor == None or pagoPersonalValor == '' or pagoPersonalValor  == 0):
+            self.pagoPersonalEmpleadoValue.set('')
+            self.pagoPersonalTipoValue.set('')
+            self.pagoPersonalValorValue.set('')
+            self.pagoPersonalObservacionValue.set('')
+            return True
+        elif not(pagoPersonalTipo):
+            return False
+        else:
+            self.pagosPersonalTree.insert('', tk.END, 
+                            values=(pagoPersonalEmpleado,
+                                    pagoPersonalTipo,
+                                    pagoPersonalValor,
+                                    pagoPersonalObservacion))
+            self.pagoPersonalEmpleadoValue.set('')
+            self.pagoPersonalTipoValue.set('')
+            self.pagoPersonalValorValue.set('')
+            self.pagoPersonalObservacionValue.set('')
+        return True
+
+    def invalidatePagoPersonalObservacion(self):
+        showwarning('Forma de Pago', message='Debe selecionar al empleado y el tipo de pago.')
+        self.pagoPersonalEmpleadosCombo.focus()
+
+    def pagoPersonalObservacionEntryReturn(self, event):
+        self.pagoPersonalEmpleadosCombo.focus()
+
+#--------------------------------Treee view --------------------------------------
+    def pagosPersonalTreeItemSelected(self, event):
+        for idItem in self.pagosPersonalTree.selection():
+            item = self.pagosPersonalTree.item(idItem)
+            self.pagoPersonalEmpleadoValue.set(item['values'][0])
+            self.pagoPersonalTipoValue.set(item['values'][1])
+            self.pagoPersonalValorValue.set(item['values'][2])
+            self.pagoPersonalObservacionValue.set(item['values'][3])
+            self.pagosPersonalTree.delete(idItem)
+            self.pagoPersonalEmpleadosCombo.focus()
+            break
+
+#============================== Crear Widgets =====================================       
 
     def crearWidgets(self):
         estilo = ttk.Style(self)
@@ -25,63 +112,93 @@ class PagosPersonalFrame(ttk.Frame):
         valuesOptions = {'sticky': 'e', 'padx': 20, 'pady': 5}
         labelsColumnsOptions = {'sticky': 'n', 'padx': 10, 'pady': 5}
 
-        selectListaPersonasFrame = ttk.Frame(self)
-        selectListaPersonasFrame.grid(row=1, column=0, sticky='we')
-
         tituloLabel = ttk.Label(self, text='Detalle de Gastos de Personal', font=('Helvetica bold', 16))
         tituloLabel.grid(row=0, column=0, columnspan=4, pady=5, sticky='n')
 
-        empleadoLabel = ttk.Label(self, text='Empleado')
-        empleadoLabel.grid(row=2,column=0, **labelsColumnsOptions)
+# --------------------------  Selecciona el contenido de la lista de empleados
+        selectListaPersonasFrame = ttk.Frame(self)
+        selectListaPersonasFrame.grid(row=1, column=0, sticky='we')
 
-        localOrigenPagoPersonalLabel = ttk.Label(self, text='Tipo de Gastos')
-        localOrigenPagoPersonalLabel.grid(row=2,column=1, **labelsColumnsOptions)
+        # opcionesListas =  [('Este Local', 'L'), ('Todos los Locales', 'T')]
+        # for lista, valor in opcionesListas:
+        #     ttk.Radiobutton(selectListaPersonasFrame, text=lista, variable=listaSeleccionada, command=setListaPersonas, value=valor).pack(side='left')
 
-        valorGastoPersonalLabel = ttk.Label(self, text='Valor del Gasto')
-        valorGastoPersonalLabel.grid(row=2,column=2, **labelsColumnsOptions)
-        
-        observacionPagoPersonalLabel = ttk.Label(self, text='Observaciones')
-        observacionPagoPersonalLabel.grid(row=2,column=3, **labelsColumnsOptions)
+# ------------------------------- Lista de empleados wodget -------------------
+        pagoPersonalEmpleadoLabel = ttk.Label(self, text='Empleado')
+        pagoPersonalEmpleadoLabel.grid(row=2,column=0, **labelsColumnsOptions)
 
         personas = Personas()
         listaPersonasLocal = personas.queryByIdLocal(self.df.rw.esteLocal[0])
         listaPersonasEmpresa = personas.queryAll()
         
-        self.empleadosCombo = ttk.Combobox(self)
         listaSeleccionada = tk.StringVar()
+        self.pagoPersonalEmpleadoValue = tk.StringVar()
+        self.pagoPersonalEmpleadosCombo = ttk.Combobox(self, textvariable=self.pagoPersonalEmpleadoValue, justify='left' )
         listaSeleccionada.set('L')
         def setListaPersonas():
             if listaSeleccionada.get() == 'L':
-                self.empleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasLocal]
+                self.pagoPersonalEmpleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasLocal]
             else:
-                self.empleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasEmpresa]
+                self.pagoPersonalEmpleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasEmpresa]
         setListaPersonas()
-        self.empleadosCombo['state'] = 'readonly'
-        self.empleadosCombo.grid(row=3, column=0)
-
-        pagosPersonal = PagosPersonal()
-        listaPagosPersonal= pagosPersonal.queryAll()
-        pagosPersonalCombo =ttk.Combobox(self)
-        pagosPersonalCombo['values'] = [pagoPersonal[1] for pagoPersonal in listaPagosPersonal]
-        pagosPersonalCombo['state'] ='readonly'
-        pagosPersonalCombo.grid(row=3, column=1)
-
-        valorPagoPersonalEntry = ttk.Entry(self)
-        valorPagoPersonalEntry.grid(row=3, column=2, **valuesOptions)
-
-        observacionPagoPersonalEntry = ttk.Entry(self) 
-        observacionPagoPersonalEntry.grid(row=3, column=3, **valuesOptions)
-
-
-        columnasPagosPersonal = ('empleado', 'tipoGastosPersonal', 'valorGastosPersonal', 'observaciones')
-        pagosPersonalTree = ttk.Treeview(self, columns=columnasPagosPersonal, show='headings')
-        pagosPersonalTree.heading('empleado', text='Empleado')
-        pagosPersonalTree.heading('tipoGastosPersonal', text='Tipo de Pago')
-        pagosPersonalTree.heading('valorGastosPersonal', text='Valor')
-        pagosPersonalTree.heading('observaciones', text='Observaciones')
-        pagosPersonalTree.grid(row=4, column=0, columnspan=4, sticky='nswe', pady=10)
+        self.pagoPersonalEmpleadosCombo['state'] = 'readonly'
+        self.pagoPersonalEmpleadosCombo.grid(row=3, column=0)
 
         
+
         opcionesListas =  [('Este Local', 'L'), ('Todos los Locales', 'T')]
         for lista, valor in opcionesListas:
             ttk.Radiobutton(selectListaPersonasFrame, text=lista, variable=listaSeleccionada, command=setListaPersonas, value=valor).pack(side='left')
+
+# ------------------------------------Tipo de pago widget-----------------------------
+        pagoPersonalTipoLabel = ttk.Label(self, text='Tipo de Pago')
+        pagoPersonalTipoLabel.grid(row=2,column=1, **labelsColumnsOptions)
+
+        pagosPersonal = PagosPersonal()
+        listaPagosPersonal= pagosPersonal.queryAll()
+        
+        self.pagoPersonalTipoValue = tk.StringVar()
+        self.pagoPersonalTipoCombo =ttk.Combobox(self, textvariable=self.pagoPersonalTipoValue, justify='left')
+        self.pagoPersonalTipoCombo['values'] = [pagoPersonal[1] for pagoPersonal in listaPagosPersonal]
+        self.pagoPersonalTipoCombo['state'] ='readonly'
+        self.pagoPersonalTipoCombo.grid(row=3, column=1)
+
+# -------------------------------------Valor del pago Widget ---------------------------
+        pagoPersonalValorLabel = ttk.Label(self, text='Valor del Pago')
+        pagoPersonalValorLabel.grid(row=2,column=2, **labelsColumnsOptions)
+
+        pagoPersonalValorEntryValid = (self.register(self.validatePagoPersonalValor), '%P')
+        pagoPersonalValorEntryInvalid = (self.register(self.inValidatePagoPersonalValor),)
+        self.pagoPersonalValorValue=tk.StringVar()
+        self.pagoPersonalValorEntry = ttk.Entry(self, textvariable=self.pagoPersonalValorValue, justify=tk.RIGHT)
+        self.pagoPersonalValorEntry.grid(row=3, column=2, **valuesOptions)
+        self.pagoPersonalValorEntry.config(validate='focusout',
+                                        validatecommand=pagoPersonalValorEntryValid,
+                                        invalidcommand=pagoPersonalValorEntryInvalid)
+        self.pagoPersonalValorEntry.bind('<Return>', self.pagoPersonalValorEntryReturn)
+        self.pagoPersonalValorEntry.bind('<KP_Enter>', self.pagoPersonalValorEntryReturn)
+
+# ---------------------------------------Observacion widget ---------------------------
+        pagoPersonalObservacionLabel = ttk.Label(self, text='Observaciones')
+        pagoPersonalObservacionLabel.grid(row=2,column=3, **labelsColumnsOptions)
+
+        pagoPersonalObservacionValid = (self.register(self.validatePagoPersonalObservacion),)
+        pagoPersonalObservacionInvalid = (self.register(self.invalidatePagoPersonalObservacion),)
+        self.pagoPersonalObservacionValue = tk.StringVar()
+        self.pagoPersonalObservacionEntry = ttk.Entry(self, textvariable=self.pagoPersonalObservacionValue, justify='left') 
+        self.pagoPersonalObservacionEntry.grid(row=3, column=3, **valuesOptions)
+        self.pagoPersonalObservacionEntry.config(validate='focusout',
+                                                validatecommand=pagoPersonalObservacionValid,
+                                                invalidcommand=pagoPersonalObservacionInvalid)
+        self.pagoPersonalObservacionEntry.bind('<Return>', self.pagoPersonalObservacionEntryReturn)
+        self.pagoPersonalObservacionEntry.bind('<KP_Enter>', self.pagoPersonalObservacionEntryReturn)
+
+# --------------------------------- Pagos Personal Tree View ---------------
+        columnasPagosPersonal = ('empleado', 'tipoGastosPersonal', 'valorGastosPersonal', 'observaciones')
+        self.pagosPersonalTree = ttk.Treeview(self, columns=columnasPagosPersonal, show='headings', selectmode='browse')
+        self.pagosPersonalTree.heading('empleado', text='Empleado')
+        self.pagosPersonalTree.heading('tipoGastosPersonal', text='Tipo de Pago')
+        self.pagosPersonalTree.heading('valorGastosPersonal', text='Valor')
+        self.pagosPersonalTree.heading('observaciones', text='Observaciones')
+        self.pagosPersonalTree.grid(row=4, column=0, columnspan=4, sticky='nswe', pady=10)
+        self.pagosPersonalTree.bind('<<TreeviewSelect>>', self.pagosPersonalTreeItemSelected)

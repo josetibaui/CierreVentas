@@ -81,7 +81,7 @@ class GastosGeneralesFrame(ttk.Frame):
         return True
 
     def invalidateGastoGeneralObservacion(self):
-        showwarning('Forma de Pago', message='Debe selecionar tipo ed gasto.')
+        showwarning('Forma de Pago', message='Debe selecionar tipo de gasto.')
         self.gastoGeneralTipoCombo.focus()
 
     def gastoGeneralObservacionEntryReturn(self, event):
