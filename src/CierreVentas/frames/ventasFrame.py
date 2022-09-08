@@ -31,8 +31,10 @@ class VentasFrame(ttk.Frame):
         self.ventasEntryValue.set(datosVentas['VentaTotal'])
         self.anulacionesEntryValue.set(datosVentas['Anulaciones'])
         self.devolucionesEntryValue.set(datosVentas['Devoluciones'])
+        
         for idCortesia in self.cortesiasTree.get_children():
             self.cortesiasTree.delete(idCortesia)
+
         for cortesia in datosVentas['Cortesias']:
             self.cortesiasTree.insert('', tk.END,
                                 values=(cortesia[0],
