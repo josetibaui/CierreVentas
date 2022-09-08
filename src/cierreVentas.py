@@ -1,11 +1,12 @@
 import tkinter as tk
 import os
-from datetime import datetime
+from datetime import datetime, date
 from tkinter.messagebox import showerror
 from CierreVentas.frames import headerFrame as hf
 from CierreVentas.frames import commandFrame as cf
 from CierreVentas.frames import dataFrame as df
 from modelo.igLocales import Locales
+from modelo.locCierreVentas import CierreVentas
 
 
 class App(tk.Tk):
@@ -38,35 +39,16 @@ class App(tk.Tk):
             showerror(title='Error en el local', message='No se puede determinar los datos de este local')
         return esteLocal
 
-    
-    # def identGet(self):
-    #     if self.ident !=  None:
-    #         return self.ident
-    #     else:
-    #         self.ident = self.Login()
-    #         if self.ident !=  None:
-    #             return self.ident
-    #         else:
-    #             self.cerrarAplicacion()
-
-    # def Login(self):
-
-    #     # usuario = {'id': 265, 'nombres': 'José', 'apellidos': 'Tibau Iturralde'}
-    #     # lugar = {'idLocal': 1,'codLocal': 0, 'nombreLocal': 'Las Plameras Planta'}
-    #     # fecha = datetime.now()
-    #     usuario = None
-    #     lugar = None
-    #     fecha = datetime.now()
-    #     loginFrame = login.Login(self, self.esteLocal, self.defaultColor)
-    #     if usuario == None or lugar == None:
-    #         showerror(f'Hay una discrepancia entre el usuario, la contraseña y el local.')
-    #     return {'usuario': usuario, 'lugar': lugar, 'fecha': fecha }
-
     def cerrarAplicacion(self):
         self.quit()
 
     def datosDiaGet(self):
-        pass
+        hoy = date.today()
+        # print(f'Buscar datos del local {self.esteLocal}. del día {hoy}')
+        cierreVentas = CierreVentas()
+        cierreVentas.queryByLocalFecha(self.esteLocal[0], hoy)
+        self.datosHoy = cierreVentas.data()
+        # print(f'Datos: {datosHoy}\nTipo: {type(datosHoy)}\nRegistro:{cierreVentas.cierreVentasValues()}')
 
     def crearFrames(self):
 

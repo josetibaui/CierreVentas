@@ -14,6 +14,7 @@ class VentasFrame(ttk.Frame):
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
 
+        self.datosHoy = dataFrame.datosHoy
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.ventasEntry.focus()
@@ -23,13 +24,60 @@ class VentasFrame(ttk.Frame):
 
 #------------------------Entrada-------------------------
     def ventasFrameEnter(self, event):
-        pass
-        # showinfo('Salir', message=f'Entrando al frame {event.widget}')
+        self.ventasFrameSetValues()
 
+    def ventasFrameSetValues(self):
+        datosVentas = self.df.datosHoy['Ventas']
+        self.ventasEntryValue.set(datosVentas['VentaTotal'])
+        self.anulacionesEntryValue.set(datosVentas['Anulaciones'])
+        self.devolucionesEntryValue.set(datosVentas['Devoluciones'])
+        for idCortesia in self.cortesiasTree.get_children():
+            self.cortesiasTree.delete(idCortesia)
+        for cortesia in datosVentas['Cortesias']:
+            self.cortesiasTree.insert('', tk.END,
+                                values=(cortesia[0],
+                                        cortesia[1],
+                                        cortesia[2]))
+            
 #------------------------Salida-------------------------
     def ventasFrameExit(self, event):
-        pass
-        # showinfo('Salir', message=f'Saliendo del frame {event.widget}')
+        
+        # cortesias = [[cortesia[0], Decimal(cortesia[1]), cortesia[2]] for cortesia in self.cortesiasTree if Decimal(cortesia[1]) != 0]
+        try:
+            ventaTotal = Decimal(self.ventasEntryValue.get())
+        except InvalidOperation:
+            ventaTotal = 0
+
+        try:
+            anulaciones = Decimal(self.anulacionesEntryValue.get())
+        except InvalidOperation:
+            anulaciones = 0
+
+        try:
+            devoluciones = Decimal(self.devolucionesEntryValue.get())
+        except InvalidOperation:
+            devoluciones = 0
+
+        gastosGeneralesTotal = 0
+        pagosPersonalTotal = 0
+        depositosTotal = 0
+        diferencia = ventaTotal - gastosGeneralesTotal - pagosPersonalTotal - depositosTotal
+        listaCortesias = []
+        for idCortesia in self.cortesiasTree.get_children():
+            cortesia = self.cortesiasTree.item(idCortesia)['values']
+            # print(cortesia)
+            if Decimal(cortesia[1]) != 0:
+                listaCortesias.append(cortesia)
+
+        datosVentas = {
+            'VentaTotal': ventaTotal,
+            'Anulaciones': anulaciones,
+            'Devoluciones': devoluciones,
+            'Diferencia': diferencia ,
+            'Cortesias': listaCortesias
+        }
+
+        self.df.datosHoy['Ventas'] = datosVentas
 
 #------------------- Ventas -------------------------------------------
     def validateVentas(self, entrada):
@@ -38,6 +86,7 @@ class VentasFrame(ttk.Frame):
         try:
             valor = Decimal(entrada)
             self.ventasEntryValue.set(valor)
+            self.datosHoy['Ventas']['VentaTotal'] = valor
             return True
         except InvalidOperation:
             self.ventasEntryValue.set('')
@@ -47,6 +96,7 @@ class VentasFrame(ttk.Frame):
     def inValidateVentas(self):
         showerror(title='Error', message='Se debe ingresar un valor')
         self.ventasEntryValue.set('')
+        self.datosHoy['Ventas']['VentaTotal'] = ''
         self.ventasEntry.focus()
 
     def ventasEntryReturn(self, event):
@@ -59,6 +109,7 @@ class VentasFrame(ttk.Frame):
         try:
             valor = Decimal(entrada)
             self.anulacionesEntryValue.set(valor)
+            self.datosHoy['Ventas']['Anulaciones'] = valor
             return True
         except InvalidOperation:
             self.anulacionesEntryValue.set('')
@@ -67,6 +118,7 @@ class VentasFrame(ttk.Frame):
     def inValidateAnulaciones(self):
         showerror(title='Error', message='Se debe ingresar un valor')
         self.anulacionesEntryValue.set('')
+        self.datosHoy['Ventas']['Anulaciones'] = ''
         self.anulacionesEntry.focus()
 
     def anulacionesEntryReturn(self, event):
@@ -80,6 +132,7 @@ class VentasFrame(ttk.Frame):
         try:
             valor = Decimal(entrada)
             self.devolucionesEntryValue.set(valor)
+            self.datosHoy['Ventas']['Devoluciones'] = valor
             return True
         except InvalidOperation:
             self.devolucionesEntryValue.set('')
@@ -88,6 +141,7 @@ class VentasFrame(ttk.Frame):
     def inValidateDevoluciones(self):
         showerror(title='Error', message='Se debe ingresar un valor')
         self.devolucionesEntryValue.set('')
+        self.datosHoy['Ventas']['Anulaciones'] = ''
         self.devolucionesEntry.focus()
 
     def devolucionesEntryReturn(self, event):

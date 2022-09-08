@@ -11,6 +11,7 @@ class FormasPagosFrame(ttk.Frame):
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
 
+        self.datosHoy = dataFrame.datosHoy
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.formaPagoTipoCombo.focus()
@@ -20,15 +21,52 @@ class FormasPagosFrame(ttk.Frame):
 
 #-------------------Entrada-------------------------------------------
     def formasPagosFrameEnter(self,event):
-        pass
-     # showinfo('Salir', message=f'Entrando al frame {event.widget}')
+        self.formasPagosFrameSetValues()
+        
+    def formasPagosFrameSetValues(self):
+        for idFormaPago in self.formasPagosTree.get_children():
+            self.formasPagosTree.delete(idFormaPago)
+        # totalFormasPagos = 0
+        formasPagos = self.df.datosHoy['FormasPagos']
+        for formaPago in formasPagos['FormasPagos']:
+            self.formasPagosTree.insert('', tk.END, 
+                            values=(formaPago[0],
+                                    formaPago[1],
+                                    formaPago[2]))
+            # totalFormasPagos += formaPago[1]
+        # print(f'Venta Total ={ventaTotal}, Tarjetas, etc.={totalFormasPagos}, Efectivo={ventaTotal - totalFormasPagos}')
+        # self.efectivoValue.set('{:-2f}'.format(ventaTotal - totalFormasPagos))
+        self.calcularPagoEfectivo()
 
 #-------------------Salida-------------------------------------------
     def formasPagosFrameExit(self,event):
-        pass
-     # showinfo('Salir', message=f'Saliendo del frame {event.widget}')
+        try:
+            efectivo = Decimal(self.efectivoValue.get())
+        except InvalidOperation:
+            efectivo = 0
+        
+        listaFormasPago =[]
+        for idFormaPago in self.formasPagosTree.get_children():
+            formaPago = self.formasPagosTree.item(idFormaPago)['values']
+            if Decimal(formaPago[1]) != 0:
+                listaFormasPago.append(formaPago)
 
+        datosFormasPago = {
+            'Efectivo': efectivo,
+            'FormasPagos': listaFormasPago
+        }
+
+        self.df.datosHoy['FormasPagos'] = datosFormasPago
 #-------------------Efectivo------------------------------
+    def calcularPagoEfectivo(self):
+        ventaTotal = self.df.datosHoy['Ventas']['VentaTotal']
+        totalFormasPagos = 0
+        for idFormaPago in self.formasPagosTree.get_children():
+            formaPago = self.formasPagosTree.item(idFormaPago)
+            totalFormasPagos += Decimal(formaPago['values'][1])
+        # print(f'Venta Total ={ventaTotal}, Tarjetas, etc.={totalFormasPagos}, Efectivo={ventaTotal - totalFormasPagos}')
+        # efectivoValor = ventaTotal - totalFormasPagos
+        self.efectivoValue.set('{:-2f}'.format(ventaTotal - totalFormasPagos))
 
 #-------------------Tipo de forma de pago -----------------------
     # def formaPagoTipoCheck(self, event):
@@ -76,6 +114,7 @@ class FormasPagosFrame(ttk.Frame):
             self.formaPagoTipoValue.set('')
             self.formaPagoValorValue.set('')
             self.formaPagoDescripcionValue.set('')
+            self.calcularPagoEfectivo()
             return True
         elif not(formaPagoTipo):
             return False
@@ -84,6 +123,7 @@ class FormasPagosFrame(ttk.Frame):
                             values=(formaPagoTipo,
                                     formaPagoValor,
                                     formaPagoDescripcion))
+            self.calcularPagoEfectivo()
             self.formaPagoTipoValue.set('')
             self.formaPagoValorValue.set('')
             self.formaPagoDescripcionValue.set('')
@@ -128,7 +168,8 @@ class FormasPagosFrame(ttk.Frame):
         efectivoLabel = ttk.Label(self, text='Efectivo')
         efectivoLabel.grid(row=1,column=0, **labelsEntryOptions)
 
-        self.efectivoEntry = ttk.Entry(self)
+        self.efectivoValue = tk.StringVar()
+        self.efectivoEntry = ttk.Entry(self, textvariable=self.efectivoValue, justify=tk.RIGHT)
         self.efectivoEntry['takefocus'] = 0
         self.efectivoEntry['state'] = 'readonly'
         self.efectivoEntry.grid(row=1,column=1, **entryOptions)
@@ -145,7 +186,7 @@ class FormasPagosFrame(ttk.Frame):
         listaFormasPagos = formasPagos.queryAll()
         self.formaPagoTipoValue = tk.StringVar()
         self.formaPagoTipoCombo = ttk.Combobox(self, textvariable=self.formaPagoTipoValue, justify='left')
-        self.formaPagoTipoCombo['values'] = [formaPago[1] for formaPago in listaFormasPagos]
+        self.formaPagoTipoCombo['values'] = [formaPago[1] for formaPago in listaFormasPagos if formaPago[1] != 'Efectivo']
         self.formaPagoTipoCombo['state'] = 'readonly'
         self.formaPagoTipoCombo.grid(row=3, column=1)
 

@@ -120,6 +120,7 @@ class DepositosFrame(ttk.Frame):
         self.depositoBancosCombo['values'] = [banco[1] for banco in listaBancos]
         self.depositoBancosCombo['state'] = 'readonly' 
         self.depositoBancosCombo.grid(row=2, column=0)
+        self.depositoBancosCombo.current(0)
 
 #---------------------------------Depósito Valor-----------------------------
         depositoValorLabel =ttk.Label(self, text='Valor del depósito')

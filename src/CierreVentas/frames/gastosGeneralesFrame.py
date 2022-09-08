@@ -12,6 +12,7 @@ class GastosGeneralesFrame(ttk.Frame):
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
 
+        self.datosHoy = dataFrame.datosHoy
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.gastoGeneralTipoCombo.focus()
@@ -21,11 +22,26 @@ class GastosGeneralesFrame(ttk.Frame):
 
 #-----------------------------Entrada-----------------------------------
     def gastosGeneralesFrameEnter(self, event):
-        pass
+        self.gastosGeneralesFrameSetValues()
+
+    def gastosGeneralesFrameSetValues(self):
+        for idItem in self.gastosGeneralesTree.get_children():
+            self.gastosGeneralesTree.delete(idItem)
+
+        for gastoGeneral in self.df.datosHoy['GastosGenerales']:
+            self.gastosGeneralesTree.insert('', tk.END, 
+                            values=(gastoGeneral[0],
+                                    gastoGeneral[1],
+                                    gastoGeneral[2],
+                                    gastoGeneral[3]))
 #-----------------------------Salida------------------------------------
     def gastosGeneralesFrameExit(self, event):
-        pass
-
+        listaGastosGenerales = []
+        for idGastoGeneral in self.gastosGeneralesTree.get_children():
+            gastoGeneral = self.gastosGeneralesTree.item(idGastoGeneral)['values']
+            if Decimal(gastoGeneral[1]) != 0:
+                listaGastosGenerales.append(gastoGeneral)
+        self.df.datosHoy['GastosGenerales'] = listaGastosGenerales
 #------------------------- Tipo de gasto ----------------------------
 
 #--------------------------Valor del gastos --------------

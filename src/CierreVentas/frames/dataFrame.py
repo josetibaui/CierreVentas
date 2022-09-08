@@ -14,8 +14,9 @@ class DataFrame(ttk.Frame):
         super().__init__(rootWindow)
 
         self.rw = rootWindow
+        self.datosHoy = rootWindow.datosHoy
         self.defaultColor = rootWindow.defaultColor
-        estilo = ttk.Style(self.rw)
+        estilo = ttk.Style(rootWindow)
         estilo.configure('TFrame', background=self.defaultColor, highlightthickness=1)
         self['borderwidth'] = 1
         self['relief'] = 'solid'
@@ -62,8 +63,10 @@ class DataFrame(ttk.Frame):
         if destino == 'loginFrame':
             self.dataFrames['loginFrame'].usuarioEntry.focus()
         if destino == 'ventasFrame':
+            self.dataFrames['ventasFrame'].ventasFrameSetValues()
             self.dataFrames['ventasFrame'].ventasEntry.focus()
         elif destino == 'formasPagosFrame':
+            self.dataFrames['formasPagosFrame'].formasPagosFrameSetValues()
             self.dataFrames['formasPagosFrame'].formaPagoTipoCombo.focus()
         elif destino == 'gastosGeneralesFrame':
             self.dataFrames['gastosGeneralesFrame'].gastoGeneralTipoCombo.focus()

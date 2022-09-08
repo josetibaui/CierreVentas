@@ -1,3 +1,4 @@
+from json import JSONDecoder
 import modelo.DBConnection as DBConnection
 
 
@@ -12,12 +13,11 @@ class CierreVentas():
     def __init__(self):
         self.connection = DBConnection.DBConnection.Instance()
         self.cursor= self.connection.connect.cursor()
-    
 
     @property
     def idCierreVentas(self):
         return self._idCierreVentas
-    
+
     @idCierreVentas.setter
     def idCierreVentas(self, idCierreVentas):
         self._idCierreVentas = idCierreVentas
@@ -25,7 +25,7 @@ class CierreVentas():
     @property
     def idLocal(self):
         return self._idLocal
-    
+
     @idLocal.setter
     def idLocal(self, idLocal):
         self._idLocal = idLocal
@@ -33,7 +33,7 @@ class CierreVentas():
     @property
     def fecha(self):
         return self._fecha
-    
+ 
     @fecha.setter
     def fecha(self, fecha):
         self._fecha = fecha
@@ -77,25 +77,50 @@ class CierreVentas():
     def queryById(self, idCierreVentas):
         selStr = f'SELECT * FROM loc_cierreVentas WHERE idCierreVentas = ?'
         self.cursor.execute(selStr, (idCierreVentas))
-        return self.cursor.fetchone()
+        cierreVentas = self.cursor.fetchone()
+        if cierreVentas:
+            self.idCierreVentas = cierreVentas[0]
+            self.idLocal = cierreVentas[1]
+            self.fecha = cierreVentas[2]
+            self.data = JSONDecoder(cierreVentas[3])
+            self.por = cierreVentas[4]
+        else:
+            self.idCierreVentas = 0
+            self.idLocal = None
+            self.fecha = None
+            self.data = self.crearDataStructure
+            self.por = None
     
     def queryByLocalFecha(self, idLocal, fecha):
         selStr = 'SELECT * FROM loc_cierreVentas WHERE idLocal = ? AND fecha = ?'
         self.cursor.execute(selStr, (idLocal, fecha))
-        return self.cursor.fetchone()
+        cierreVentas = self.cursor.fetchone()
+        # print(f'Datos leidos: {cierreVentas}')
+        if cierreVentas:
+            self.idCierreVentas = cierreVentas[0]
+            self.idLocal = idLocal
+            self.fecha = fecha
+            self.data = JSONDecoder(cierreVentas[3])
+            self.por = cierreVentas[4]
+        else:
+            self.idCierreVentas = 0
+            self.idLocal = idLocal
+            self.fecha = fecha
+            self.data = self.crearDataStructure
+            self.por = None
 
-    def crearDataStructure():
+    def crearDataStructure(self):
         return {
             'Ventas': {
-                'VentaTotal' : 0.00,
-                'Anulaciones' :  0.00,
-                'Devoluciones' : 0.00,
-                'Diferencia': 0.00,
+                'VentaTotal' : "",
+                'Anulaciones' :  "",
+                'Devoluciones' : "",
+                'Diferencia': "",
                 'Cortesias' : [] },
             'FormasPagos' : {
-                'Efectivo' : 0.00,
+                'Efectivo' : "",
                 'FormasPagos': [] },
-            'Egresos': [],
+            'GastosGenerales': [],
             'PagosPersonal' : [],
             'Depositos' : []
         }
