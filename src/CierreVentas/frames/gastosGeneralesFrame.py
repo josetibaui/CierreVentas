@@ -34,6 +34,7 @@ class GastosGeneralesFrame(ttk.Frame):
                                     gastoGeneral[1],
                                     gastoGeneral[2],
                                     gastoGeneral[3]))
+                                    
 #-----------------------------Salida------------------------------------
     def gastosGeneralesFrameExit(self, event):
         listaGastosGenerales = []
@@ -42,6 +43,7 @@ class GastosGeneralesFrame(ttk.Frame):
             if Decimal(gastoGeneral[1]) != 0:
                 listaGastosGenerales.append(gastoGeneral)
         self.df.datosHoy['GastosGenerales'] = listaGastosGenerales
+
 #------------------------- Tipo de gasto ----------------------------
 
 #--------------------------Valor del gastos --------------

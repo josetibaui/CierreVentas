@@ -13,6 +13,7 @@ class PagosPersonalFrame(ttk.Frame):
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
 
+        self.datosHoy = dataFrame.datosHoy
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.pagoPersonalEmpleadosCombo.focus()
@@ -22,10 +23,27 @@ class PagosPersonalFrame(ttk.Frame):
 
 #-----------------------------Entrada-----------------------------------
     def pagosPersonalFrameEnter(self, event):
-        pass
+        self.pagosPersonalFrameSetValues()
+
+    def pagosPersonalFrameSetValues(self):
+        for idItem in self.pagosPersonalTree.get_children():
+            self.pagosPersonalTree.delete(idItem)
+
+        for pagoPersonal in self.df.datosHoy['PagosPersonal']:
+            self.pagosPersonalTree.insert('', tk.END, 
+                            values=(pagoPersonal[0],
+                                    pagoPersonal[1],
+                                    pagoPersonal[2],
+                                    pagoPersonal[3]))
 #-----------------------------Salida------------------------------------
     def pagosPersonalFrameExit(self, event):
-        pass
+       listaPagosPersonal = []
+       for idItem in self.pagosPersonalTree.get_children():
+            pagoPersonal = self.pagosPersonalTree.item(idItem)['values']
+            if Decimal(pagoPersonal[2]) != 0:
+                listaPagosPersonal.append(pagoPersonal)
+
+       self.df.datosHoy['PagosPersonal'] = listaPagosPersonal
 
 # --------------------------------Lista de empleados -------------------------
 

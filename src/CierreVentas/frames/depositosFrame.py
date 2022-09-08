@@ -10,6 +10,8 @@ class DepositosFrame(ttk.Frame):
 
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
+
+        self.datosHoy = dataFrame.datosHoy
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.depositoBancosCombo.focus()
@@ -19,12 +21,26 @@ class DepositosFrame(ttk.Frame):
 
 #------------------------Entrada------------------------------
     def depositosFrameEnter(self, event):
-        pass
+        self.depositosFrameSetValues()
+
+    def depositosFrameSetValues(self):
+        for idItem in self.depositosTree.get_children():
+            self.depositosTree.delete(idItem)
+
+        for deposito in self.df.datosHoy['Depositos']:
+            self.depositosTree.insert('', tk.END,
+                                values=(deposito[0],
+                                        deposito[1],
+                                        deposito[2]))
 
 #-------------------------Salida------------------------------
     def depositosFrameExit(self, event):
-        pass
-
+        listaDepositos = []
+        for idItem in self.depositosTree.get_children():
+            deposito = self.depositosTree.item(idItem)['values']
+            listaDepositos.append(deposito)
+        self.df.datosHoy['Depositos'] = listaDepositos
+        
 #-------------------------Lista de bancos-------------------------
 
 #--------------------------- Valor del depósito---------------------------------

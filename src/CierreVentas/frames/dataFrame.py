@@ -69,8 +69,11 @@ class DataFrame(ttk.Frame):
             self.dataFrames['formasPagosFrame'].formasPagosFrameSetValues()
             self.dataFrames['formasPagosFrame'].formaPagoTipoCombo.focus()
         elif destino == 'gastosGeneralesFrame':
+            self.dataFrames['gastosGeneralesFrame'].gastosGeneralesFrameSetValues()
             self.dataFrames['gastosGeneralesFrame'].gastoGeneralTipoCombo.focus()
         elif destino == 'pagosPersonalFrame':
+            self.dataFrames['pagosPersonalFrame'].pagosPersonalFrameSetValues()
             self.dataFrames['pagosPersonalFrame'].pagoPersonalEmpleadosCombo.focus()
         elif destino == 'depositosFrame':
+             self.dataFrames['depositosFrame'].depositosFrameSetValues()
              self.dataFrames['depositosFrame'].depositoBancosCombo.focus()
