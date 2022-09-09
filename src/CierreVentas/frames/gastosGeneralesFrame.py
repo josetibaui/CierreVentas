@@ -177,9 +177,8 @@ class GastosGeneralesFrame(ttk.Frame):
         listaLocalesDisplay = [f'{local[1]} - {local[2]}' for local in listaLocales if local[0] != self.df.rw.esteLocal[0]]
         listaLocalesDisplay.insert(0,'')
         self.gastoGeneralLocalOrigenValue = tk.StringVar()
-        self.gastoGeneralLocalOrigenCombo = ttk.Combobox(self, textvariable=self.gastoGeneralLocalOrigenValue, justify='left')
+        self.gastoGeneralLocalOrigenCombo = ttk.Combobox(self, textvariable=self.gastoGeneralLocalOrigenValue, justify='left', state='readonly')
         self.gastoGeneralLocalOrigenCombo['values'] = listaLocalesDisplay
-        self.gastoGeneralLocalOrigenCombo['state'] = 'readonly'
         self.gastoGeneralLocalOrigenCombo.grid(row=2, column=2)
 
 # ------------------------------------Observaciones del gastos genral ------------------------

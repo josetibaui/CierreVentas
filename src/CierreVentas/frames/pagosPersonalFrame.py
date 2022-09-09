@@ -137,10 +137,6 @@ class PagosPersonalFrame(ttk.Frame):
         selectListaPersonasFrame = ttk.Frame(self)
         selectListaPersonasFrame.grid(row=1, column=0, sticky='we')
 
-        # opcionesListas =  [('Este Local', 'L'), ('Todos los Locales', 'T')]
-        # for lista, valor in opcionesListas:
-        #     ttk.Radiobutton(selectListaPersonasFrame, text=lista, variable=listaSeleccionada, command=setListaPersonas, value=valor).pack(side='left')
-
 # ------------------------------- Lista de empleados wodget -------------------
         pagoPersonalEmpleadoLabel = ttk.Label(self, text='Empleado')
         pagoPersonalEmpleadoLabel.grid(row=2,column=0, **labelsColumnsOptions)
@@ -151,7 +147,7 @@ class PagosPersonalFrame(ttk.Frame):
         
         listaSeleccionada = tk.StringVar()
         self.pagoPersonalEmpleadoValue = tk.StringVar()
-        self.pagoPersonalEmpleadosCombo = ttk.Combobox(self, textvariable=self.pagoPersonalEmpleadoValue, justify='left' )
+        self.pagoPersonalEmpleadosCombo = ttk.Combobox(self, textvariable=self.pagoPersonalEmpleadoValue, justify='left', state='readonly')
         listaSeleccionada.set('L')
         def setListaPersonas():
             if listaSeleccionada.get() == 'L':
@@ -159,7 +155,6 @@ class PagosPersonalFrame(ttk.Frame):
             else:
                 self.pagoPersonalEmpleadosCombo['values'] = [f'{empleado[2]} {empleado[1]}' for empleado in listaPersonasEmpresa]
         setListaPersonas()
-        self.pagoPersonalEmpleadosCombo['state'] = 'readonly'
         self.pagoPersonalEmpleadosCombo.grid(row=3, column=0)
 
         
@@ -176,9 +171,8 @@ class PagosPersonalFrame(ttk.Frame):
         listaPagosPersonal= pagosPersonal.queryAll()
         
         self.pagoPersonalTipoValue = tk.StringVar()
-        self.pagoPersonalTipoCombo =ttk.Combobox(self, textvariable=self.pagoPersonalTipoValue, justify='left')
+        self.pagoPersonalTipoCombo =ttk.Combobox(self, textvariable=self.pagoPersonalTipoValue, justify='left', state='readonly')
         self.pagoPersonalTipoCombo['values'] = [pagoPersonal[1] for pagoPersonal in listaPagosPersonal]
-        self.pagoPersonalTipoCombo['state'] ='readonly'
         self.pagoPersonalTipoCombo.grid(row=3, column=1)
 
 # -------------------------------------Valor del pago Widget ---------------------------

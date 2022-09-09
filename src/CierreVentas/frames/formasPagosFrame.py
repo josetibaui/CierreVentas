@@ -1,5 +1,6 @@
+from os import stat
 import tkinter as tk
-from tkinter import ttk
+from tkinter import RIGHT, ttk
 from tkinter.messagebox import *
 from modelo.locFormasPagos import FormasPagos as FormasPagos
 from decimal import Decimal, InvalidOperation
@@ -26,16 +27,12 @@ class FormasPagosFrame(ttk.Frame):
     def formasPagosFrameSetValues(self):
         for idFormaPago in self.formasPagosTree.get_children():
             self.formasPagosTree.delete(idFormaPago)
-        # totalFormasPagos = 0
         formasPagos = self.df.datosHoy['FormasPagos']
         for formaPago in formasPagos['FormasPagos']:
             self.formasPagosTree.insert('', tk.END, 
                             values=(formaPago[0],
                                     formaPago[1],
                                     formaPago[2]))
-            # totalFormasPagos += formaPago[1]
-        # print(f'Venta Total ={ventaTotal}, Tarjetas, etc.={totalFormasPagos}, Efectivo={ventaTotal - totalFormasPagos}')
-        # self.efectivoValue.set('{:-2f}'.format(ventaTotal - totalFormasPagos))
         self.calcularPagoEfectivo()
 
 #-------------------Salida-------------------------------------------
@@ -64,9 +61,7 @@ class FormasPagosFrame(ttk.Frame):
         for idFormaPago in self.formasPagosTree.get_children():
             formaPago = self.formasPagosTree.item(idFormaPago)
             totalFormasPagos += Decimal(formaPago['values'][1])
-        # print(f'Venta Total ={ventaTotal}, Tarjetas, etc.={totalFormasPagos}, Efectivo={ventaTotal - totalFormasPagos}')
-        # efectivoValor = ventaTotal - totalFormasPagos
-        self.efectivoValue.set('{:-2f}'.format(ventaTotal - totalFormasPagos))
+        self.efectivoValue.set('{:-.2f}'.format(ventaTotal - totalFormasPagos))
 
 #-------------------Tipo de forma de pago -----------------------
     # def formaPagoTipoCheck(self, event):
@@ -169,9 +164,7 @@ class FormasPagosFrame(ttk.Frame):
         efectivoLabel.grid(row=1,column=0, **labelsEntryOptions)
 
         self.efectivoValue = tk.StringVar()
-        self.efectivoEntry = ttk.Entry(self, textvariable=self.efectivoValue, justify=tk.RIGHT)
-        self.efectivoEntry['takefocus'] = 0
-        self.efectivoEntry['state'] = 'readonly'
+        self.efectivoEntry = ttk.Entry(self, textvariable=self.efectivoValue, justify=tk.RIGHT, takefocus=0, state='readonly')
         self.efectivoEntry.grid(row=1,column=1, **entryOptions)
 
 # ====================== Formas de Pago Widgets =============================
@@ -185,9 +178,8 @@ class FormasPagosFrame(ttk.Frame):
         formasPagos = FormasPagos()
         listaFormasPagos = formasPagos.queryAll()
         self.formaPagoTipoValue = tk.StringVar()
-        self.formaPagoTipoCombo = ttk.Combobox(self, textvariable=self.formaPagoTipoValue, justify='left')
+        self.formaPagoTipoCombo = ttk.Combobox(self, textvariable=self.formaPagoTipoValue, justify='left', state='readonly')
         self.formaPagoTipoCombo['values'] = [formaPago[1] for formaPago in listaFormasPagos if formaPago[1] != 'Efectivo']
-        self.formaPagoTipoCombo['state'] = 'readonly'
         self.formaPagoTipoCombo.grid(row=3, column=1)
 
 # ------------------------- Valor de la forma de pago widget-----------------
@@ -228,56 +220,3 @@ class FormasPagosFrame(ttk.Frame):
         self.formasPagosTree.heading('observacion', text='Observaciones')
         self.formasPagosTree.grid(row=4, column=1, columnspan=3, sticky='nswe', pady=10)
         self.formasPagosTree.bind('<<TreeviewSelect>>', self.formasPagosTreeItemSelected)
-
-        # tipoFormasPagoLabel = ttk.Label(self, text='Forma de Pago')
-        # valorFormasPagoLabel =ttk.Label(self, text='Valor')
-        # efectivoLabel = ttk.Label(self, text='Valor Recibido en Efectivo')
-        # efectivoValor = ttk.Label(self, text='0.00')
-
-        # self.tipoFormasPagoCombo = ttk.Combobox(self)
-        # self.tipoFormasPagoCombo['values'] = ['Medianet', 'DataFast', 'Cheque', 'Transferencia', 'Retención IR']
-        # self.tipoFormasPagoCombo['state'] = 'readonly' 
-        # valorFormasPagoEntry = tk.Entry(self)
-
-        # columnasFormasPago = ('tipoFormasPago', 'valor')
-        # formasPagoTree = ttk.Treeview(self, columns=columnasFormasPago, show='headings')
-        # formasPagoTree.heading('tipoFormasPago', text='Formas de Pago')
-        # formasPagoTree.heading('valor', text='Valores')
-
-        # tituloLabel.grid(row=0, column=0, columnspan=2, sticky='WE')
-        # tipoFormasPagoLabel.grid(row=1, column=0, sticky='WE')
-        # valorFormasPagoLabel.grid(row=1, column=1, sticky='WE')
-        # efectivoLabel.grid(row=1, column=2, sticky='WE')
-        # efectivoValor.grid(row=2, column=3, sticky='WE')
-        # self.tipoFormasPagoCombo.grid(row=2, column=0, sticky='WE')
-        # valorFormasPagoEntry.grid(row=2, column=1, sticky='WE')
-
-    # def initFocus(self):
-    #     self.tipoFormasPagoCombo.focus()
-
-
-    # tituloLabel = tk.Label(formasPagoFrame, text='Detalle de Formas de Pago de Clientes', bg=defaultColor, font=('Helvetica bold', 16))
-    # tipoFormasPagoLabel = tk.Label(formasPagoFrame, text='Forma de Pago', bg=defaultColor)
-    # valorFormasPagoLabel =tk.Label(formasPagoFrame, text='Valor', bg=defaultColor)
-    # efectivoLabel = tk.Label(formasPagoFrame, text='Valor Recibido en Efectivo', bg=defaultColor)
-    # efectivoValor = tk.Label(formasPagoFrame, text='0', bg='#ffffff')
-# 
-    # tipoFormasPagoCombo = ttk.Combobox(formasPagoFrame)
-    # tipoFormasPagoCombo['values'] = ['Medianet', 'DataFast', 'Cheque', 'Transferencia', 'Retención IR']
-    # tipoFormasPagoCombo['state'] = 'readonly' 
-    # valorFormasPagoEntry = tk.Entry(formasPagoFrame)
-# 
-    # columnasFormasPago = ('tipoFormasPago', 'valor')
-    # formasPagoTree = ttk.Treeview(formasPagoFrame, columns=columnasFormasPago, show='headings')
-    # formasPagoTree.heading('tipoFormasPago', text='Formas de Pago')
-    # formasPagoTree.heading('valor', text='Valores')
-# 
-    # tituloLabel.grid(row=0, column=0, columnspan=2, sticky='WE')
-    # tipoFormasPagoLabel.grid(row=1, column=0, sticky='WE')
-    # valorFormasPagoLabel.grid(row=1, column=1, sticky='WE')
-    # efectivoLabel.grid(row=1, column=2, sticky='WE')
-    # efectivoValor.grid(row=2, column=3, sticky='WE')
-    # tipoFormasPagoCombo.grid(row=2, column=0, sticky='WE')
-    # valorFormasPagoEntry.grid(row=2, column=1, sticky='WE')
-# 
-    # formasPagoTree.grid(row=3, column=0, columnspan=3, sticky='nswe', pady=10)

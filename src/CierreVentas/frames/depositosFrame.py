@@ -132,9 +132,8 @@ class DepositosFrame(ttk.Frame):
         bancos = Bancos()
         listaBancos = bancos.queryAll()
         self.depositoBancoValue = tk.StringVar()
-        self.depositoBancosCombo = ttk.Combobox(self, textvariable=self.depositoBancoValue, justify='left')
+        self.depositoBancosCombo = ttk.Combobox(self, textvariable=self.depositoBancoValue, justify='left', state='readonly')
         self.depositoBancosCombo['values'] = [banco[1] for banco in listaBancos]
-        self.depositoBancosCombo['state'] = 'readonly' 
         self.depositoBancosCombo.grid(row=2, column=0)
         self.depositoBancosCombo.current(0)
 

@@ -77,3 +77,5 @@ class DataFrame(ttk.Frame):
         elif destino == 'depositosFrame':
              self.dataFrames['depositosFrame'].depositosFrameSetValues()
              self.dataFrames['depositosFrame'].depositoBancosCombo.focus()
+        elif destino == 'resumenFrame':
+             self.dataFrames['resumenFrame'].resumenFrameSetValues()
