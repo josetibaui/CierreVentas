@@ -14,7 +14,7 @@ class App(tk.Tk):
     defaultColor =  '#FFF8EF'
     esteLocal = None
     ident = None
-    datosDia = None
+    datosHoy = None
 
     def __init__(self) -> None:
         super().__init__()
@@ -40,14 +40,15 @@ class App(tk.Tk):
         return esteLocal
 
     def cerrarAplicacion(self):
+        self.mainFrames['dataFrame'].saveData()
         self.quit()
 
     def datosDiaGet(self):
         hoy = date.today()
         # print(f'Buscar datos del local {self.esteLocal}. del día {hoy}')
-        cierreVentas = CierreVentas()
-        cierreVentas.queryByLocalFecha(self.esteLocal[0], hoy)
-        self.datosHoy = cierreVentas.data()
+        self.cierreVentas = CierreVentas()
+        self.cierreVentas.queryByLocalFecha(self.esteLocal[0], hoy)
+        self.datosHoy = self.cierreVentas.data()
         # print(f'Datos: {datosHoy}\nTipo: {type(datosHoy)}\nRegistro:{cierreVentas.cierreVentasValues()}')
 
     def crearFrames(self):

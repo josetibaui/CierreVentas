@@ -1,5 +1,6 @@
-from json import JSONDecoder
+from json import JSONDecoder, JSONEncoder
 import modelo.DBConnection as DBConnection
+from tkinter.messagebox import *
 
 
 class CierreVentas():
@@ -44,7 +45,7 @@ class CierreVentas():
     
     @data.setter
     def data(self, data):
-        self._data = data
+        self._data = JSONEncoder(data)
 
     @property
     def idPor(self):
@@ -56,6 +57,7 @@ class CierreVentas():
 
     def cierreVentasValues(self):
         return [
+            self.idCierreVentas,
             self.idLocal,
             self.fecha,
             self.data,
@@ -63,10 +65,19 @@ class CierreVentas():
         ]
 
     def insert(self):
-        pass
+        insStr = f'INSERT INTO loc_cierreVentas VALUES(?, ?, ?, ?, ?)'
+        try:
+            self.cursor.execute(insStr, self.cierreVentasValues)
+            self.idCierreVentas()
+        except:
+            showerror(title='Error en DB', message='No se pudo guardar el registro de datos del día.')
 
     def update(self):
-        pass
+        updStr = f'UPDATE loc_cierreVentas SET data = ?, idPor = ? WHERE idCierreVentas = ?'
+        try:
+            self.cursor.execute(updStr, (self.data(), self.idPor(), self.idCierreVentas()))
+        except:
+            showerror(title='Error en DB', message='No se pudo guardar los cambios en el registro de datos del día.')
 
     def replace(self):
         pass

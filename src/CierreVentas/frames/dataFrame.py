@@ -14,7 +14,8 @@ class DataFrame(ttk.Frame):
         super().__init__(rootWindow)
 
         self.rw = rootWindow
-        self.datosHoy = rootWindow.datosHoy
+        self.cierreVentas = rootWindow.cierreVentas
+        # self.datosHoy = rootWindow.datosHoy
         self.defaultColor = rootWindow.defaultColor
         estilo = ttk.Style(rootWindow)
         estilo.configure('TFrame', background=self.defaultColor, highlightthickness=1)
@@ -58,7 +59,9 @@ class DataFrame(ttk.Frame):
         subFrame.rowconfigure(10, weight=1)
 
 
-    def cambiarFrame(self, destino):
+    def cambiarFrame(self, destino, origen=None):
+        if origen != 'loginFrame':
+            self.saveData()
         self.dataFrames[destino].tkraise()
         if destino == 'loginFrame':
             self.dataFrames['loginFrame'].usuarioEntry.focus()
@@ -79,3 +82,15 @@ class DataFrame(ttk.Frame):
              self.dataFrames['depositosFrame'].depositoBancosCombo.focus()
         elif destino == 'resumenFrame':
              self.dataFrames['resumenFrame'].resumenFrameSetValues()
+
+# '''
+#    Si los datos son diferentes de una estructura vacía se graba en la base de datos
+# '''
+    def saveData(self):
+        if self.cierreVentas.data() != self.cierreVentas.crearDataStructure():
+            self.cierreVentas.idPor(self.rw.ident[0])
+        self.cierreVentas.data(self.rw.datosHoy)
+        if self.cierreVentas.idCierreVentas == 0:
+           self.cierreVentas.insert()
+        else:
+           self.cierreVentas.update()
