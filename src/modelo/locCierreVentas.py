@@ -1,4 +1,5 @@
 from json import JSONDecoder, JSONEncoder
+import json
 import modelo.DBConnection as DBConnection
 from tkinter.messagebox import *
 
@@ -10,6 +11,20 @@ class CierreVentas():
     _fecha = None
     _data = None
     _idPor = None
+    _estructuraBase = {
+            'Ventas': {
+                'VentaTotal' : "",
+                'Anulaciones' :  "",
+                'Devoluciones' : "",
+                'Diferencia': "",
+                'Cortesias' : [] },
+            'FormasPagos' : {
+                'Efectivo' : "",
+                'FormasPagos': [] },
+            'GastosGenerales': [],
+            'PagosPersonal' : [],
+            'Depositos' : []
+        }
 
     def __init__(self):
         self.connection = DBConnection.DBConnection.Instance()
@@ -45,7 +60,7 @@ class CierreVentas():
     
     @data.setter
     def data(self, data):
-        self._data = JSONEncoder(data)
+        self._data = data
 
     @property
     def idPor(self):
@@ -54,6 +69,10 @@ class CierreVentas():
     @idPor.setter
     def idPor(self, idPor):
         self._idPor = idPor
+
+    @property
+    def estructuraBase(self):
+        return self._estructuraBase
 
     def cierreVentasValues(self):
         return [
@@ -93,13 +112,13 @@ class CierreVentas():
             self.idCierreVentas = cierreVentas[0]
             self.idLocal = cierreVentas[1]
             self.fecha = cierreVentas[2]
-            self.data = JSONDecoder(cierreVentas[3])
+            self.data = cierreVentas[3]
             self.por = cierreVentas[4]
         else:
             self.idCierreVentas = 0
             self.idLocal = None
             self.fecha = None
-            self.data = self.crearDataStructure
+            self.data = self.estructuraBase
             self.por = None
     
     def queryByLocalFecha(self, idLocal, fecha):
@@ -111,27 +130,11 @@ class CierreVentas():
             self.idCierreVentas = cierreVentas[0]
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = JSONDecoder(cierreVentas[3])
+            self.data = cierreVentas[3]
             self.por = cierreVentas[4]
         else:
             self.idCierreVentas = 0
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = self.crearDataStructure
+            self.data = self.estructuraBase
             self.por = None
-
-    def crearDataStructure(self):
-        return {
-            'Ventas': {
-                'VentaTotal' : "",
-                'Anulaciones' :  "",
-                'Devoluciones' : "",
-                'Diferencia': "",
-                'Cortesias' : [] },
-            'FormasPagos' : {
-                'Efectivo' : "",
-                'FormasPagos': [] },
-            'GastosGenerales': [],
-            'PagosPersonal' : [],
-            'Depositos' : []
-        }

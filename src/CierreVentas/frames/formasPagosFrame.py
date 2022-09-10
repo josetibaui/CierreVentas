@@ -53,10 +53,10 @@ class FormasPagosFrame(ttk.Frame):
             'FormasPagos': listaFormasPago
         }
 
-        self.df.datosHoy['FormasPagos'] = datosFormasPago
+        self.datosHoy['FormasPagos'] = datosFormasPago
 #-------------------Efectivo------------------------------
     def calcularPagoEfectivo(self):
-        ventaTotal = self.df.datosHoy['Ventas']['VentaTotal']
+        ventaTotal = self.datosHoy['Ventas']['VentaTotal']
         totalFormasPagos = 0
         for idFormaPago in self.formasPagosTree.get_children():
             formaPago = self.formasPagosTree.item(idFormaPago)

@@ -42,7 +42,7 @@ class GastosGeneralesFrame(ttk.Frame):
             gastoGeneral = self.gastosGeneralesTree.item(idGastoGeneral)['values']
             if Decimal(gastoGeneral[1]) != 0:
                 listaGastosGenerales.append(gastoGeneral)
-        self.df.datosHoy['GastosGenerales'] = listaGastosGenerales
+        self.datosHoy['GastosGenerales'] = listaGastosGenerales
 
 #------------------------- Tipo de gasto ----------------------------
 

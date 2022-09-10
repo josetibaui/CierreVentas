@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter.messagebox import showerror, showinfo, showwarning
 from CierreVentas.frames import commandFrame
 from modelo.igPersonas import Personas
-from passlib.hash import sha512_crypt as sha512
+# from passlib.hash import sha512_crypt as sha512
 
 
 class LoginFrame(ttk.Frame):

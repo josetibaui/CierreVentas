@@ -15,7 +15,7 @@ class DataFrame(ttk.Frame):
 
         self.rw = rootWindow
         self.cierreVentas = rootWindow.cierreVentas
-        # self.datosHoy = rootWindow.datosHoy
+        self.datosHoy = rootWindow.datosHoy
         self.defaultColor = rootWindow.defaultColor
         estilo = ttk.Style(rootWindow)
         estilo.configure('TFrame', background=self.defaultColor, highlightthickness=1)
@@ -38,7 +38,7 @@ class DataFrame(ttk.Frame):
             'blankFrame': blankFrame.BlankFrame(self)
         }    
 
-        self.cambiarFrame('loginFrame')
+        self.cambiarFrame('loginFrame','loginFrame')
 
     def gridConfigure(self, subFrame):
         subFrame.columnconfigure(0, weight=1)
@@ -87,10 +87,17 @@ class DataFrame(ttk.Frame):
 #    Si los datos son diferentes de una estructura vacía se graba en la base de datos
 # '''
     def saveData(self):
-        if self.cierreVentas.data() != self.cierreVentas.crearDataStructure():
-            self.cierreVentas.idPor(self.rw.ident[0])
-        self.cierreVentas.data(self.rw.datosHoy)
-        if self.cierreVentas.idCierreVentas == 0:
-           self.cierreVentas.insert()
-        else:
-           self.cierreVentas.update()
+        pass
+        # self.rw.cierreVentas.idPor(self.rw.ident[0])
+        # self.rw.cierreVentas.data(self.rw.datosHoy)
+        # datosActuales = self.rw.datosHoy
+        # estructuraBase = self.rw.cierreVentas.crearDataStructure()
+        # print(f'Datos actuales\n{datosActuales}\n\nEstructura vacia\n{estructuraBase}')
+        # # if self.rw.cierreVentas.data() != self.rw.cierreVentas.crearDataStructure():
+        # #     self.rw.cierreVentas.idPor(self.rw.ident[0])
+        # if self.rw.cierreVentas.idCierreVentas == 0:
+        #     print('INSERT')
+        # #    self.rw.cierreVentas.insert()
+        # else:
+        #     print('UPDATE')
+        # #    self.rw.cierreVentas.update()

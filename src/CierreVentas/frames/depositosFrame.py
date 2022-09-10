@@ -39,7 +39,7 @@ class DepositosFrame(ttk.Frame):
         for idItem in self.depositosTree.get_children():
             deposito = self.depositosTree.item(idItem)['values']
             listaDepositos.append(deposito)
-        self.df.datosHoy['Depositos'] = listaDepositos
+        self.datosHoy['Depositos'] = listaDepositos
         
 #-------------------------Lista de bancos-------------------------
 

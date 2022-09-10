@@ -1,4 +1,4 @@
-from decimal import Decimal, getcontext
+from decimal import Decimal, InvalidOperation, getcontext
 import tkinter as tk
 from tkinter import ANCHOR, ttk
 
@@ -40,11 +40,16 @@ class ResumenFrame(ttk.Frame):
         self.valores['cortesias'].set('{:-.2f}'.format(totalCortesias))
 
 # ----------------------------Formas de Pago ----------------------------------------
-        efectivo = self.datosHoy['FormasPagos']['Efectivo']
+        try:
+            efectivo = Decimal(self.datosHoy['FormasPagos']['Efectivo'])
+        except InvalidOperation:
+            efectivo = 0
+
         self.valores['efectivo'].set('{:-.2f}'.format(efectivo))
         totalFormasPagos = 0
         for formaPago in self.datosHoy['FormasPagos']['FormasPagos']:
             totalFormasPagos += Decimal(formaPago[1])
+
         self.valores['formasPagos'].set('{:-.2f}'.format(totalFormasPagos))
 
 # -----------------------------Gastos Generales --------------------------------------

@@ -43,7 +43,7 @@ class PagosPersonalFrame(ttk.Frame):
             if Decimal(pagoPersonal[2]) != 0:
                 listaPagosPersonal.append(pagoPersonal)
 
-       self.df.datosHoy['PagosPersonal'] = listaPagosPersonal
+       self.datosHoy['PagosPersonal'] = listaPagosPersonal
 
 # --------------------------------Lista de empleados -------------------------
 

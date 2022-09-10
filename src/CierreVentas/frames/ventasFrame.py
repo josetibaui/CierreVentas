@@ -14,7 +14,8 @@ class VentasFrame(ttk.Frame):
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
 
-        self.datosHoy = dataFrame.datosHoy
+        self.datosHoy = dataFrame.rw.datosHoy
+        # print(f'Datos Hoy de rw:\n{dataFrame.rw.datosHoy}')
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.ventasEntry.focus()
@@ -27,7 +28,8 @@ class VentasFrame(ttk.Frame):
         self.ventasFrameSetValues()
 
     def ventasFrameSetValues(self):
-        datosVentas = self.df.datosHoy['Ventas']
+        # print(f'Datos hoy en ventas setValues: {type(self.datosHoy)}\n{self.datosHoy}')
+        datosVentas = self.datosHoy['Ventas']
         self.ventasEntryValue.set(datosVentas['VentaTotal'])
         self.anulacionesEntryValue.set(datosVentas['Anulaciones'])
         self.devolucionesEntryValue.set(datosVentas['Devoluciones'])
@@ -79,7 +81,7 @@ class VentasFrame(ttk.Frame):
             'Cortesias': listaCortesias
         }
 
-        self.df.datosHoy['Ventas'] = datosVentas
+        self.datosHoy['Ventas'] = datosVentas
 
 #------------------- Ventas -------------------------------------------
     def validateVentas(self, entrada):
@@ -98,7 +100,7 @@ class VentasFrame(ttk.Frame):
     def inValidateVentas(self):
         showerror(title='Error', message='Se debe ingresar un valor')
         self.ventasEntryValue.set('')
-        self.datosHoy['Ventas']['VentaTotal'] = ''
+        self.fd.rw.datosHoy['Ventas']['VentaTotal'] = ''
         self.ventasEntry.focus()
 
     def ventasEntryReturn(self, event):
