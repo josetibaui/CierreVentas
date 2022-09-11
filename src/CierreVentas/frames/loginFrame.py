@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter.messagebox import showerror, showinfo, showwarning
+from tkinter.messagebox import showerror, showinfo, showwarning, askretrycancel
 from CierreVentas.frames import commandFrame
 from modelo.igPersonas import Personas
 # from passlib.hash import sha512_crypt as sha512
@@ -73,10 +73,13 @@ class LoginFrame(ttk.Frame):
         persona = Personas()
         user = persona.checkAuth(self.usuario.get(), self.contrasena.get(), self.df.rw.esteLocal[0])
         if user == None:
-            showwarning(title='Usuario incorrecto', message='Hay una discrepancia entre el usuario, la contraseña y el local')
-            self.usuario.set('')
-            self.contrasena.set('')
-            self.usuarioEntry.focus()
+            # showwarning(title='Usuario incorrecto', message='Hay una discrepancia entre el usuario, la contraseña y el local')
+            if askretrycancel(title='Usuario incorrecto', message='Hay una discrepancia entre el usuario, la contraseña y el local.\n\n<Reintar> para volver a ingresar el usuario y contraseña.\nSi no, pulse <Cancelar> para terminar'):
+                self.usuario.set('')
+                self.contrasena.set('')
+                self.usuarioEntry.focus()
+            else:
+                self.df.rw.quit()
         else:
             self.df.rw.ident = user
             for nombre, boton in self.cf.botones.items():
