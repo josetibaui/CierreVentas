@@ -1,7 +1,8 @@
-from json import JSONDecoder, JSONEncoder
-import json
+import sqlite3
 import modelo.DBConnection as DBConnection
+from sqlite3 import Error
 from tkinter.messagebox import *
+from  datetime import date
 
 
 class CierreVentas():
@@ -13,13 +14,13 @@ class CierreVentas():
     _idPor = None
     _estructuraBase = {
             'Ventas': {
-                'VentaTotal' : "",
-                'Anulaciones' :  "",
-                'Devoluciones' : "",
-                'Diferencia': "",
+                'VentaTotal' : "0.0",
+                'Anulaciones' :  "0.0",
+                'Devoluciones' : "0.0",
+                'Diferencia': "0.0",
                 'Cortesias' : [] },
             'FormasPagos' : {
-                'Efectivo' : "",
+                'Efectivo' : "0.0",
                 'FormasPagos': [] },
             'GastosGenerales': [],
             'PagosPersonal' : [],
@@ -49,6 +50,9 @@ class CierreVentas():
     @property
     def fecha(self):
         return self._fecha
+
+    def fechaFormat(self,formato='%Y-%m-%d'):
+        return self._fecha.strftime(formato)
  
     @fecha.setter
     def fecha(self, fecha):
@@ -74,29 +78,34 @@ class CierreVentas():
     def estructuraBase(self):
         return self._estructuraBase
 
+    def __str__(self):
+        return str(self.cierreVentasValues)
+
     def cierreVentasValues(self):
         return [
             self.idCierreVentas,
             self.idLocal,
-            self.fecha,
+            self.fechaFormat(),
             self.data,
             self.idPor
         ]
 
     def insert(self):
-        insStr = f'INSERT INTO loc_cierreVentas VALUES(?, ?, ?, ?, ?)'
+        insStr = f'INSERT INTO loc_cierreVentas (idLocal, fecha, data, idPor) VALUES(?, ?, ?, ?)'
         try:
-            self.cursor.execute(insStr, self.cierreVentasValues)
-            self.idCierreVentas()
-        except:
-            showerror(title='Error en DB', message='No se pudo guardar el registro de datos del día.')
+            self.cursor.execute(insStr, [self.idLocal, self.fechaFormat(), str(self.data), self.idPor])
+            self.idCierreVentas = self.cursor.lastrowid
+            self.connection.connect.commit()
+        except Error as err:
+            showerror(title='Error en DB', message=f'No se pudo guardar el registro de datos del día.\n{str(err)}')
 
     def update(self):
         updStr = f'UPDATE loc_cierreVentas SET data = ?, idPor = ? WHERE idCierreVentas = ?'
         try:
-            self.cursor.execute(updStr, (self.data(), self.idPor(), self.idCierreVentas()))
-        except:
-            showerror(title='Error en DB', message='No se pudo guardar los cambios en el registro de datos del día.')
+            self.cursor.execute(updStr, (str(self.data), self.idPor, self.idCierreVentas))
+            self.connection.connect.commit()
+        except Error as err:
+            showerror(title='Error en DB', message=f'No se pudo guardar los cambios en el registro de datos del día.\n{str(err)}')
 
     def replace(self):
         pass
@@ -107,13 +116,13 @@ class CierreVentas():
     def queryById(self, idCierreVentas):
         selStr = f'SELECT * FROM loc_cierreVentas WHERE idCierreVentas = ?'
         self.cursor.execute(selStr, (idCierreVentas))
-        cierreVentas = self.cursor.fetchone()
-        if cierreVentas:
-            self.idCierreVentas = cierreVentas[0]
-            self.idLocal = cierreVentas[1]
-            self.fecha = cierreVentas[2]
-            self.data = cierreVentas[3]
-            self.por = cierreVentas[4]
+        self.cierreVentas = self.cursor.fetchone()
+        if self.cierreVentas:
+            self.idCierreVentas = self.cierreVentas[0]
+            self.idLocal = self.cierreVentas[1]
+            self.fecha = self.cierreVentas[2]
+            self.data = dict(self.cierreVentas[3])
+            self.por = self.cierreVentas[4]
         else:
             self.idCierreVentas = 0
             self.idLocal = None
@@ -123,18 +132,19 @@ class CierreVentas():
     
     def queryByLocalFecha(self, idLocal, fecha):
         selStr = 'SELECT * FROM loc_cierreVentas WHERE idLocal = ? AND fecha = ?'
-        self.cursor.execute(selStr, (idLocal, fecha))
-        cierreVentas = self.cursor.fetchone()
-        # print(f'Datos leidos: {cierreVentas}')
-        if cierreVentas:
-            self.idCierreVentas = cierreVentas[0]
+        # print(f'selStr = {selStr}, Local = {idLocal}, fecha = {fecha.strftime("%Y-%m-%d")}')
+        self.cursor.execute(selStr, (idLocal, fecha.strftime('%Y-%m-%d')))
+        self.cierreVentas = self.cursor.fetchone()
+        # print(f'Datos leidos: {self.cierreVentas}')
+        if self.cierreVentas:
+            self.idCierreVentas = self.cierreVentas[0]
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = cierreVentas[3]
-            self.por = cierreVentas[4]
+            self.data = dict(eval(self.cierreVentas[3]))
+            self.por = self.cierreVentas[4]
         else:
             self.idCierreVentas = 0
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = self.estructuraBase
+            self.data = dict(self.estructuraBase)
             self.por = None

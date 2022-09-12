@@ -26,51 +26,62 @@ class ResumenFrame(ttk.Frame):
 
 #-------------Ventas-----------------------
         ventas = self.datosHoy['Ventas']
-        ventaTotal = Decimal(ventas['VentaTotal'])
-        devoluciones = Decimal(ventas['Devoluciones'])
-        anulaciones = Decimal(ventas['Anulaciones'])
-        totalCortesias = 0
+        ventaTotal = float(ventas['VentaTotal'])
+        devoluciones = ventas['Devoluciones']
+        anulaciones = ventas['Anulaciones']
+        totalCortesias = 0.0
         listaCortesias = ventas['Cortesias']
         for cortesia in listaCortesias:
-            totalCortesias+= Decimal(cortesia[1])
-        
-        self.valores['ventas'].set('{:-.2f}'.format(ventaTotal))
-        self.valores['anulaciones'].set('{:-.2f}'.format(anulaciones))
-        self.valores['devoluciones'].set('{:-.2f}'.format(devoluciones))
-        self.valores['cortesias'].set('{:-.2f}'.format(totalCortesias))
+            totalCortesias+= cortesia[1]
+
+        self.valores['ventas'].set(ventaTotal)
+        self.valores['anulaciones'].set(anulaciones)
+        self.valores['devoluciones'].set(devoluciones)
+        self.valores['cortesias'].set(totalCortesias)
+
+        # self.valores['ventas'].set('{:-.2f}'.format(ventaTotal))
+        # self.valores['anulaciones'].set('{:-.2f}'.format(anulaciones))
+        # self.valores['devoluciones'].set('{:-.2f}'.format(devoluciones))
+        # self.valores['cortesias'].set('{:-.2f}'.format(totalCortesias))
 
 # ----------------------------Formas de Pago ----------------------------------------
-        try:
-            efectivo = Decimal(self.datosHoy['FormasPagos']['Efectivo'])
-        except InvalidOperation:
-            efectivo = 0
+        # try:
+        #     efectivo = float(self.datosHoy['FormasPagos']['Efectivo'])
+        # except InvalidOperation:
+        #     efectivo = 0
+
+        valor = self.datosHoy['FormasPagos']['Efectivo']
+        if valor == None or valor == '':
+            valor = 0.0
+        efectivo = float(valor)
 
         self.valores['efectivo'].set('{:-.2f}'.format(efectivo))
         totalFormasPagos = 0
         for formaPago in self.datosHoy['FormasPagos']['FormasPagos']:
-            totalFormasPagos += Decimal(formaPago[1])
+            totalFormasPagos += float(formaPago[1])
 
         self.valores['formasPagos'].set('{:-.2f}'.format(totalFormasPagos))
 
 # -----------------------------Gastos Generales --------------------------------------
         totalGastosGenerales = 0
         for gastoGeneral in self.datosHoy['GastosGenerales']:
-            totalGastosGenerales += Decimal(gastoGeneral[1])
+            totalGastosGenerales += float(gastoGeneral[1])
         self.valores['gastosGenerales'].set('{:-.2f}'.format(totalGastosGenerales))
 
 #--------------------------------Pagos Personal -----------------------------------------
         totalPagosPersonal = 0
         for pagoPersonal in self.datosHoy['PagosPersonal']:
-            totalPagosPersonal += Decimal(pagoPersonal[2])
+            totalPagosPersonal += float(pagoPersonal[2])
         self.valores['pagosPersonal'].set('{:-.2f}'.format(totalPagosPersonal))
 
 #---------------------------------Depósitos---------------------------------------------
         totalDepositos = 0
         for deposito in self.datosHoy['Depositos']:
-            totalDepositos += Decimal(deposito[1])
+            totalDepositos += float(deposito[1])
         self.valores['depositos'].set('{:-.2f}'.format(totalDepositos))
 
 #---------------------------------Diferencia --------------------------------------------
+        # print(f'-------------------Tipo venta total: {type(ventaTotal)}--------------------------------')
         diferenciaValor = ventaTotal - totalFormasPagos - totalGastosGenerales - totalPagosPersonal - totalDepositos
         self.valores['diferencia'].set('{:-.2f}'.format(diferenciaValor))
 

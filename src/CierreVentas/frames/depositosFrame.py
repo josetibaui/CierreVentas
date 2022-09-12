@@ -48,7 +48,7 @@ class DepositosFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.depositoValorValue.set(entrada)
             return True
         except InvalidOperation:
@@ -68,7 +68,7 @@ class DepositosFrame(ttk.Frame):
         depositoBanco = self.depositoBancoValue.get()
         depositoObservacion = self.depositoObservacionValue.get()
         try:
-            depositoValor = Decimal(self.depositoValorValue.get())
+            depositoValor = float(self.depositoValorValue.get())
         except InvalidOperation:
             depositoValor = 0
 

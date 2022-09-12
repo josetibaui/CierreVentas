@@ -87,7 +87,20 @@ class DataFrame(ttk.Frame):
 #    Si los datos son diferentes de una estructura vacía se graba en la base de datos
 # '''
     def saveData(self):
-        pass
+        # print(f'Identificación: {self.rw.ident}')
+        self.cierreVentas.idPor = self.rw.ident[0]
+        # print(f'CierreVentas. Tipo: {type(self.cierreVentas)}\nContenido: {self.cierreVentas.cierreVentasValues()}')
+        # print(f'DatosHoy. Tipo: {type(self.datosHoy)}\nContenido: {self.datosHoy}')
+        # print('---------------------------------------------------------------------')
+        if self.cierreVentas.idCierreVentas == 0:
+            # print(f'INSERT. {self.cierreVentas.cierreVentasValues()}')
+            self.cierreVentas.insert()
+        else:
+            # print(f'UPDATE. {self.cierreVentas.cierreVentasValues()}')
+            self.cierreVentas.update()
+
+
+
         # self.rw.cierreVentas.idPor(self.rw.ident[0])
         # self.rw.cierreVentas.data(self.rw.datosHoy)
         # datosActuales = self.rw.datosHoy

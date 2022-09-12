@@ -40,7 +40,7 @@ class GastosGeneralesFrame(ttk.Frame):
         listaGastosGenerales = []
         for idGastoGeneral in self.gastosGeneralesTree.get_children():
             gastoGeneral = self.gastosGeneralesTree.item(idGastoGeneral)['values']
-            if Decimal(gastoGeneral[1]) != 0:
+            if float(gastoGeneral[1]) != 0:
                 listaGastosGenerales.append(gastoGeneral)
         self.datosHoy['GastosGenerales'] = listaGastosGenerales
 
@@ -51,7 +51,7 @@ class GastosGeneralesFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.gastoGeneralValorValue.set(entrada)
             return True
         except InvalidOperation:
@@ -74,7 +74,7 @@ class GastosGeneralesFrame(ttk.Frame):
         gastoGeneralLocalOrigen = self.gastoGeneralLocalOrigenValue.get()
         gastoGeneralObservacion = self.gastoGeneralObservacionValue.get()
         try:
-            gastoGeneralValor = Decimal(self.gastoGeneralValorValue.get())
+            gastoGeneralValor = float(self.gastoGeneralValorValue.get())
         except InvalidOperation:
             gastoGeneralValor = 0
 

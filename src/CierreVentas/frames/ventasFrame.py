@@ -1,4 +1,4 @@
-# from curses.ascii import isdigit
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import *
@@ -28,7 +28,6 @@ class VentasFrame(ttk.Frame):
         self.ventasFrameSetValues()
 
     def ventasFrameSetValues(self):
-        # print(f'Datos hoy en ventas setValues: {type(self.datosHoy)}\n{self.datosHoy}')
         datosVentas = self.datosHoy['Ventas']
         self.ventasEntryValue.set(datosVentas['VentaTotal'])
         self.anulacionesEntryValue.set(datosVentas['Anulaciones'])
@@ -46,31 +45,45 @@ class VentasFrame(ttk.Frame):
 #------------------------Salida-------------------------
     def ventasFrameExit(self, event):
         
-        # cortesias = [[cortesia[0], Decimal(cortesia[1]), cortesia[2]] for cortesia in self.cortesiasTree if Decimal(cortesia[1]) != 0]
-        try:
-            ventaTotal = Decimal(self.ventasEntryValue.get())
-        except InvalidOperation:
+        # try:
+        #     ventaTotal = float(self.ventasEntryValue.get())
+        # except InvalidOperation:
+        #     ventaTotal = 0
+
+        # try:
+        #     anulaciones = float(self.anulacionesEntryValue.get())
+        # except InvalidOperation:
+        #     anulaciones = 0
+
+        # try:
+        #     devoluciones = float(self.devolucionesEntryValue.get())
+        # except InvalidOperation:
+        #     devoluciones = 0
+        ventaTotal = self.ventasEntryValue.get()
+        if ventaTotal == ''or ventaTotal == None:
             ventaTotal = 0
+        ventaTotal = float(ventaTotal)
 
-        try:
-            anulaciones = Decimal(self.anulacionesEntryValue.get())
-        except InvalidOperation:
+        anulaciones = self.anulacionesEntryValue.get()
+        if anulaciones == ''or anulaciones == None:
             anulaciones = 0
+        anulaciones = float(anulaciones)
 
-        try:
-            devoluciones = Decimal(self.devolucionesEntryValue.get())
-        except InvalidOperation:
+        devoluciones = self.devolucionesEntryValue.get()
+        if devoluciones == ''or devoluciones == None:
             devoluciones = 0
+        devoluciones = float(devoluciones)    
 
-        gastosGeneralesTotal = 0
-        pagosPersonalTotal = 0
-        depositosTotal = 0
-        diferencia = ventaTotal - gastosGeneralesTotal - pagosPersonalTotal - depositosTotal
+        gastosGeneralesTotal = 0.0
+        pagosPersonalTotal = 0.0
+        depositosTotal = 0.0
+        # print(f'===================================Tipo ventatotal: {type(ventaTotal)}----------------------------------------')
+        diferencia = float(ventaTotal) - gastosGeneralesTotal - pagosPersonalTotal - depositosTotal
+        # print(f'===================================Tipo diferencia: {type(diferencia)}----------------------------------------')
         listaCortesias = []
         for idCortesia in self.cortesiasTree.get_children():
             cortesia = self.cortesiasTree.item(idCortesia)['values']
-            # print(cortesia)
-            if Decimal(cortesia[1]) != 0:
+            if float(cortesia[1]) != 0.0:
                 listaCortesias.append(cortesia)
 
         datosVentas = {
@@ -88,14 +101,15 @@ class VentasFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.ventasEntryValue.set(valor)
-            self.datosHoy['Ventas']['VentaTotal'] = valor
+            self.datosHoy['Ventas']['VentaTotal'] = entrada
             return True
         except InvalidOperation:
             self.ventasEntryValue.set('')
             self.ventasEntry.focus()
             return False
+        
             
     def inValidateVentas(self):
         showerror(title='Error', message='Se debe ingresar un valor')
@@ -111,9 +125,9 @@ class VentasFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.anulacionesEntryValue.set(valor)
-            self.datosHoy['Ventas']['Anulaciones'] = valor
+            self.datosHoy['Ventas']['Anulaciones'] = entrada
             return True
         except InvalidOperation:
             self.anulacionesEntryValue.set('')
@@ -134,9 +148,9 @@ class VentasFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.devolucionesEntryValue.set(valor)
-            self.datosHoy['Ventas']['Devoluciones'] = valor
+            self.datosHoy['Ventas']['Devoluciones'] = entrada
             return True
         except InvalidOperation:
             self.devolucionesEntryValue.set('')
@@ -170,7 +184,7 @@ class VentasFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.cortesiaValorEntryValue.set(entrada)
             return True
         except InvalidOperation:
@@ -190,7 +204,7 @@ class VentasFrame(ttk.Frame):
         cortesiaTipo = self.cortesiaTipoValue.get()
         cortesiaObservacion = self.cortesiaObservacionValue.get()
         try:
-            cortesiaValor = Decimal(self.cortesiaValorEntryValue.get())
+            cortesiaValor = float(self.cortesiaValorEntryValue.get())
         except InvalidOperation:
             cortesiaValor = 0
 

@@ -40,7 +40,7 @@ class PagosPersonalFrame(ttk.Frame):
        listaPagosPersonal = []
        for idItem in self.pagosPersonalTree.get_children():
             pagoPersonal = self.pagosPersonalTree.item(idItem)['values']
-            if Decimal(pagoPersonal[2]) != 0:
+            if float(pagoPersonal[2]) != 0:
                 listaPagosPersonal.append(pagoPersonal)
 
        self.datosHoy['PagosPersonal'] = listaPagosPersonal
@@ -52,7 +52,7 @@ class PagosPersonalFrame(ttk.Frame):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.pagoPersonalValorValue.set(entrada)
             return True
         except InvalidOperation:
@@ -74,7 +74,7 @@ class PagosPersonalFrame(ttk.Frame):
         pagoPersonalTipo = self.pagoPersonalTipoValue.get()
         pagoPersonalObservacion = self.pagoPersonalObservacionValue.get()
         try:
-            pagoPersonalValor = Decimal(self.pagoPersonalValorValue.get())
+            pagoPersonalValor = float(self.pagoPersonalValorValue.get())
         except InvalidOperation:
             pagoPersonalValor = 0
 

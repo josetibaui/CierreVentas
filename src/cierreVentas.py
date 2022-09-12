@@ -40,7 +40,7 @@ class App(tk.Tk):
         return esteLocal
 
     def cerrarAplicacion(self):
-        # self.mainFrames['dataFrame'].saveData()
+        self.mainFrames['dataFrame'].saveData()
         self.quit()
 
     def datosDiaGet(self):
@@ -48,6 +48,7 @@ class App(tk.Tk):
         # print(f'Buscar datos del local {self.esteLocal}. del día {hoy}')
         self.cierreVentas = CierreVentas()
         self.cierreVentas.queryByLocalFecha(self.esteLocal[0], hoy)
+        # print(f'Tipo:{type(self.cierreVentas.data)}, Datos: {self.cierreVentas.data}')
         self.datosHoy = self.cierreVentas.data
         # print(f'Datos: {self.datosHoy}\nTipo: {type(self.datosHoy)}\nRegistro:{self.cierreVentas.cierreVentasValues()}')
 

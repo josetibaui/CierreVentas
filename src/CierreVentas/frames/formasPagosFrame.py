@@ -37,15 +37,15 @@ class FormasPagosFrame(ttk.Frame):
 
 #-------------------Salida-------------------------------------------
     def formasPagosFrameExit(self,event):
-        try:
-            efectivo = Decimal(self.efectivoValue.get())
-        except InvalidOperation:
-            efectivo = 0
+
+        efectivo = self.efectivoValue.get()
+        if efectivo == '' or efectivo == None:
+            efectiv0 = 0
         
         listaFormasPago =[]
         for idFormaPago in self.formasPagosTree.get_children():
             formaPago = self.formasPagosTree.item(idFormaPago)['values']
-            if Decimal(formaPago[1]) != 0:
+            if float(formaPago[1]) != 0:
                 listaFormasPago.append(formaPago)
 
         datosFormasPago = {
@@ -57,31 +57,26 @@ class FormasPagosFrame(ttk.Frame):
 #-------------------Efectivo------------------------------
     def calcularPagoEfectivo(self):
         ventaTotal = self.datosHoy['Ventas']['VentaTotal']
-        totalFormasPagos = 0
+        if ventaTotal == '' or ventaTotal == None:
+            ventaTotal = 0.0
+        ventaTotal = float(ventaTotal)
+        totalFormasPagos = 0.0
         for idFormaPago in self.formasPagosTree.get_children():
             formaPago = self.formasPagosTree.item(idFormaPago)
-            totalFormasPagos += Decimal(formaPago['values'][1])
-        self.efectivoValue.set('{:-.2f}'.format(ventaTotal - totalFormasPagos))
+            valor = formaPago['values'][1]
+            if valor == '' or valor == None:
+                valor= 0.0
+            totalFormasPagos += float(valor)
+        self.efectivoValue.set(ventaTotal - totalFormasPagos)
 
 #-------------------Tipo de forma de pago -----------------------
-    # def formaPagoTipoCheck(self, event):
-    #     valor = self.formaPagoTipoValue.get()
-    #     if valor == None or valor == '':
-    #         showwarning('Tipo de forma de pago', message='Debe selecionar el tipo de forma de pago')
-    #         self.formaPagoTipoCombo.focus()
-    #         return False
-    #     else:
-    #         return True
-
-    # def formaPagoTipoReturn(self, event):
-    #     self.formaPagoValorEntry.focus()
-
+   
 #----------------------------Forma Pagos valor ------------------
     def validateFormaPagoValor(self, entrada):
         if entrada == None or entrada == '':
             entrada = 0.00
         try:
-            valor = Decimal(entrada)
+            valor = float(entrada)
             self.formaPagoValorValue.set(entrada)
             return True
         except InvalidOperation:
@@ -101,7 +96,7 @@ class FormasPagosFrame(ttk.Frame):
         formaPagoTipo = self.formaPagoTipoValue.get()
         formaPagoDescripcion = self.formaPagoDescripcionValue.get()
         try:
-            formaPagoValor = Decimal(self.formaPagoValorValue.get())
+            formaPagoValor = float(self.formaPagoValorValue.get())
         except InvalidOperation:
             formaPagoValor = 0
 
