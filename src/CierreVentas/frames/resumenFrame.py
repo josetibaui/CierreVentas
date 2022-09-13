@@ -32,7 +32,7 @@ class ResumenFrame(ttk.Frame):
         totalCortesias = 0.0
         listaCortesias = ventas['Cortesias']
         for cortesia in listaCortesias:
-            totalCortesias+= cortesia[1]
+            totalCortesias+= float(cortesia[1])
 
         self.valores['ventas'].set(ventaTotal)
         self.valores['anulaciones'].set(anulaciones)

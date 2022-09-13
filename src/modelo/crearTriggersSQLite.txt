@@ -1,7 +1,12 @@
 CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVentas
   BEGIN
-    INSERT INTO ig_log VALUES(
-        0, 
+    INSERT INTO ig_log (tabla,
+                        idTabla,
+                        idPersona,
+                        fechaHora,
+                        preCondicion,
+                        postCondicion)
+    VALUES(
         'loc_cierreVentas',
         new.idCierreVentas,
         new.idPor,
@@ -17,8 +22,13 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_ins AFTER INSERT ON loc_cierreVent
 $
 CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_upd AFTER UPDATE ON loc_cierreVentas
   BEGIN
-    INSERT INTO ig_log VALUES(
-        0, 
+    INSERT INTO ig_log (tabla,
+                        idTabla,
+                        idPersona,
+                        fechaHora,
+                        preCondicion,
+                        postCondicion) 
+    VALUES(
         'loc_cierreVentas',
         new.idCierreVentas,
         new.idPor,
@@ -38,8 +48,13 @@ CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_upd AFTER UPDATE ON loc_cierreVent
 $
 CREATE TRIGGER IF NOT EXISTS loc_cierreVentas_del AFTER DELETE ON loc_cierreVentas
   BEGIN
-    INSERT INTO ig_log VALUES(
-        0, 
+    INSERT INTO ig_log  (tabla,
+                        idTabla,
+                        idPersona,
+                        fechaHora,
+                        preCondicion,
+                        postCondicion)
+    VALUES(
         'loc_cierreVentas',
         old.idCierreVentas,
         old.idPor,
