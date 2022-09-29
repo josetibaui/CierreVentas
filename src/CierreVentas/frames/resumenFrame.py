@@ -39,27 +39,18 @@ class ResumenFrame(ttk.Frame):
         self.valores['devoluciones'].set(devoluciones)
         self.valores['cortesias'].set(totalCortesias)
 
-        # self.valores['ventas'].set('{:-.2f}'.format(ventaTotal))
-        # self.valores['anulaciones'].set('{:-.2f}'.format(anulaciones))
-        # self.valores['devoluciones'].set('{:-.2f}'.format(devoluciones))
-        # self.valores['cortesias'].set('{:-.2f}'.format(totalCortesias))
 
 # ----------------------------Formas de Pago ----------------------------------------
-        # try:
-        #     efectivo = float(self.datosHoy['FormasPagos']['Efectivo'])
-        # except InvalidOperation:
-        #     efectivo = 0
 
         valor = self.datosHoy['FormasPagos']['Efectivo']
         if valor == None or valor == '':
             valor = 0.0
         efectivo = float(valor)
-
         self.valores['efectivo'].set('{:-.2f}'.format(efectivo))
+
         totalFormasPagos = 0
         for formaPago in self.datosHoy['FormasPagos']['FormasPagos']:
             totalFormasPagos += float(formaPago[1])
-
         self.valores['formasPagos'].set('{:-.2f}'.format(totalFormasPagos))
 
 # -----------------------------Gastos Generales --------------------------------------
@@ -107,7 +98,7 @@ class ResumenFrame(ttk.Frame):
             Base Name, Label Text, row, column label, column value
         '''
         widgets = [
-            ('ventas', 'Venta Total del Día', 2, 0, 1),
+            ('ventas', 'Venta Total del Día', 1, 0, 1),
             ('gastosGenerales', 'Total Gastos Generales', 3, 0, 1),
             ('pagosPersonal', 'Total Gastos de Personal', 4, 0, 1),
             ('depositos', 'Total Depósitos', 5, 0, 1),

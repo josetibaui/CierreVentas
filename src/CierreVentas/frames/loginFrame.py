@@ -19,7 +19,7 @@ class LoginFrame(ttk.Frame):
         # Desactivar los botones del frame command
         for nombre, boton in commandFrame.botones.items():
             # if nombre != 'salirButton':
-            boton.state(['disabled'])
+                boton.state(['disabled'])
         
         self.crearWidgets()
         self.initFocus()
@@ -73,7 +73,6 @@ class LoginFrame(ttk.Frame):
         persona = Personas()
         user = persona.checkAuth(self.usuario.get(), self.contrasena.get(), self.df.rw.esteLocal[0])
         if user == None:
-            # showwarning(title='Usuario incorrecto', message='Hay una discrepancia entre el usuario, la contraseña y el local')
             if askretrycancel(title='Usuario incorrecto', message='Hay una discrepancia entre el usuario, la contraseña y el local.\n\n<Reintar> para volver a ingresar el usuario y contraseña.\nSi no, pulse <Cancelar> para terminar'):
                 self.usuario.set('')
                 self.contrasena.set('')
@@ -83,7 +82,6 @@ class LoginFrame(ttk.Frame):
         else:
             self.df.rw.ident = user
             for nombre, boton in self.cf.botones.items():
-                # if nombre != 'salirButton':
                 boton.state(['!disabled'])
             self.hf.crearIdentWidgets(self.df.rw.esteLocal, user)
             self.df.cambiarFrame(destino='ventasFrame', origen='loginFrame')

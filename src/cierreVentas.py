@@ -45,12 +45,9 @@ class App(tk.Tk):
 
     def datosDiaGet(self):
         hoy = date.today()
-        # print(f'Buscar datos del local {self.esteLocal}. del día {hoy}')
         self.cierreVentas = CierreVentas()
         self.cierreVentas.queryByLocalFecha(self.esteLocal[0], hoy)
-        # print(f'Tipo:{type(self.cierreVentas.data)}, Datos: {self.cierreVentas.data}')
         self.datosHoy = self.cierreVentas.data
-        # print(f'Datos: {self.datosHoy}\nTipo: {type(self.datosHoy)}\nRegistro:{self.cierreVentas.cierreVentasValues()}')
 
     def crearFrames(self):
 

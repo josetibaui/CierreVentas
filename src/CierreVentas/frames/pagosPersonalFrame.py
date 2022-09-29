@@ -13,6 +13,7 @@ class PagosPersonalFrame(ttk.Frame):
         self.df = dataFrame
         self.grid(row=0, column=0, sticky='nsew')
 
+    
         self.datosHoy = dataFrame.datosHoy
         dataFrame.gridConfigure(self)
         self.crearWidgets()

@@ -3,6 +3,8 @@ import modelo.DBConnection as DBConnection
 from sqlite3 import Error
 from tkinter.messagebox import *
 from  datetime import date
+from json import dumps
+import ast
 
 
 class CierreVentas():
@@ -13,18 +15,18 @@ class CierreVentas():
     _data = None
     _idPor = None
     _estructuraBase = {
-            'Ventas': {
-                'VentaTotal' : "0.0",
-                'Anulaciones' :  "0.0",
-                'Devoluciones' : "0.0",
-                'Diferencia': "0.0",
-                'Cortesias' : [] },
-            'FormasPagos' : {
-                'Efectivo' : "0.0",
-                'FormasPagos': [] },
-            'GastosGenerales': [],
-            'PagosPersonal' : [],
-            'Depositos' : []
+            "Ventas": {
+                "VentaTotal" : "",
+                "Anulaciones" :  "",
+                "Devoluciones" : "",
+                "Diferencia": "",
+                "Cortesias" : [] },
+            "FormasPagos" : {
+                "Efectivo" : "",
+                "FormasPagos": [] },
+            "GastosGenerales": [],
+            "PagosPersonal" : [],
+            "Depositos" : []
         }
 
     def __init__(self):
@@ -121,30 +123,45 @@ class CierreVentas():
             self.idCierreVentas = self.cierreVentas[0]
             self.idLocal = self.cierreVentas[1]
             self.fecha = self.cierreVentas[2]
-            self.data = dict(self.cierreVentas[3])
+            self._data = self.cierreVentas[3]
             self.por = self.cierreVentas[4]
         else:
             self.idCierreVentas = 0
             self.idLocal = None
             self.fecha = None
-            self.data = self.estructuraBase
+            self.data = dumps(self.estructuraBase)
             self.por = None
     
     def queryByLocalFecha(self, idLocal, fecha):
         selStr = 'SELECT * FROM loc_cierreVentas WHERE idLocal = ? AND fecha = ?'
-        # print(f'selStr = {selStr}, Local = {idLocal}, fecha = {fecha.strftime("%Y-%m-%d")}')
         self.cursor.execute(selStr, (idLocal, fecha.strftime('%Y-%m-%d')))
         self.cierreVentas = self.cursor.fetchone()
-        # print(f'Datos leidos: {self.cierreVentas}')
         if self.cierreVentas:
+            # print('\nCierre Ventas[3]:')
+            # print(type(self.cierreVentas[3]))
+            # print(self.cierreVentas[3])
+
             self.idCierreVentas = self.cierreVentas[0]
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = dict(eval(self.cierreVentas[3]))
+            self.data = ast.literal_eval(self.cierreVentas[3])
             self.por = self.cierreVentas[4]
+            
+            # print('\n_data:')
+            # print(type(self._data))
+            # print(self._data)
+            # print('\ndata:')
+            # print(type(self.data))
+            # print(self.data)
         else:
             self.idCierreVentas = 0
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = dict(self.estructuraBase)
+            self.data = self.estructuraBase
             self.por = None
+            # print(type(self.estructuraBase))
+            # print(self.estructuraBase)
+            # print(type(self._data))
+            # print(self._data)
+            # print(type(self.data))
+            # print(self.data)

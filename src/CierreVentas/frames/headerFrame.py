@@ -12,10 +12,6 @@ class HeaderFrame(ttk.Frame):
         estilo.configure('TLabel', background=self.rw.defaultColor)
 
         self.pack(fill='x')
-        # identificacion = rw.identificacion
-        # self.usuario = rw.ident['usuario']
-        # self.lugar = rw.ident['lugar']
-        # self.fecha = rw.ident['fecha']
         self.crearWidgets()
 
     def crearWidgets(self):
@@ -24,14 +20,6 @@ class HeaderFrame(ttk.Frame):
 
         tituloLabel = ttk.Label(self, text='Cierre Diario de Ventas', justify='center', font=('Helvetica', 20))
         self.identFrame = ttk.Frame(self)
-
-        # # localLabel = ttk.Label(identFrame, text=self.lugar['nombreLocal'])
-        # # fechaLabel = ttk.Label(identFrame, text=self.fecha.strftime('%d-%m-%Y'))
-        # # userLabel = ttk.Label(identFrame, text=self.usuario['nombres']+' '+self.usuario['apellidos'])
-
-        # localLabel.pack(fill='both', padx=5)
-        # fechaLabel.pack(fill='both', padx=5)
-        # userLabel.pack(fill='both', padx=5)
 
         logoLabel.pack(side='left', fill='both')
         self.identFrame.pack(side='right')

@@ -6,6 +6,7 @@ from modelo.locCortesias import Cortesias  as Cortesias
 from decimal import Decimal, InvalidOperation
 
 
+
 class VentasFrame(ttk.Frame):
 
     def __init__(self, dataFrame):
@@ -15,7 +16,6 @@ class VentasFrame(ttk.Frame):
         self.grid(row=0, column=0, sticky='nsew')
 
         self.datosHoy = dataFrame.rw.datosHoy
-        # print(f'Datos Hoy de rw:\n{dataFrame.rw.datosHoy}')
         dataFrame.gridConfigure(self)
         self.crearWidgets()
         self.ventasEntry.focus()
@@ -45,40 +45,35 @@ class VentasFrame(ttk.Frame):
 #------------------------Salida-------------------------
     def ventasFrameExit(self, event):
         
-        # try:
-        #     ventaTotal = float(self.ventasEntryValue.get())
-        # except InvalidOperation:
-        #     ventaTotal = 0
-
-        # try:
-        #     anulaciones = float(self.anulacionesEntryValue.get())
-        # except InvalidOperation:
-        #     anulaciones = 0
-
-        # try:
-        #     devoluciones = float(self.devolucionesEntryValue.get())
-        # except InvalidOperation:
-        #     devoluciones = 0
         ventaTotal = self.ventasEntryValue.get()
-        if ventaTotal == ''or ventaTotal == None:
+        if ventaTotal == '' or ventaTotal == None:
             ventaTotal = 0
         ventaTotal = float(ventaTotal)
 
         anulaciones = self.anulacionesEntryValue.get()
-        if anulaciones == ''or anulaciones == None:
+        if anulaciones == '' or anulaciones == None:
             anulaciones = 0
         anulaciones = float(anulaciones)
 
         devoluciones = self.devolucionesEntryValue.get()
-        if devoluciones == ''or devoluciones == None:
+        if devoluciones == '' or devoluciones == None:
             devoluciones = 0
         devoluciones = float(devoluciones)    
 
-        gastosGeneralesTotal = 0.0
-        pagosPersonalTotal = 0.0
-        depositosTotal = 0.0
+        totalGastosGenerales = 0
+        for gastoGeneral in self.datosHoy['GastosGenerales']:
+            totalGastosGenerales += float(gastoGeneral[1])
+
+        totalPagosPersonal = 0
+        for pagoPersonal in self.datosHoy['PagosPersonal']:
+            totalPagosPersonal += float(pagoPersonal[2])
+
+        totalDepositos = 0
+        for deposito in self.datosHoy['Depositos']:
+            totalDepositos += float(deposito[1])
+        
         # print(f'===================================Tipo ventatotal: {type(ventaTotal)}----------------------------------------')
-        diferencia = float(ventaTotal) - gastosGeneralesTotal - pagosPersonalTotal - depositosTotal
+        diferencia = ventaTotal - totalGastosGenerales - totalPagosPersonal - totalDepositos
         # print(f'===================================Tipo diferencia: {type(diferencia)}----------------------------------------')
         listaCortesias = []
         for idCortesia in self.cortesiasTree.get_children():
@@ -90,7 +85,7 @@ class VentasFrame(ttk.Frame):
             'VentaTotal': ventaTotal,
             'Anulaciones': anulaciones,
             'Devoluciones': devoluciones,
-            'Diferencia': diferencia ,
+            'Diferencia': ventaTotal ,
             'Cortesias': listaCortesias
         }
 
@@ -102,7 +97,7 @@ class VentasFrame(ttk.Frame):
             entrada = 0.00
         try:
             valor = float(entrada)
-            self.ventasEntryValue.set(valor)
+            # self.ventasEntryValue.set(valor)
             self.datosHoy['Ventas']['VentaTotal'] = entrada
             return True
         except InvalidOperation:
@@ -126,7 +121,7 @@ class VentasFrame(ttk.Frame):
             entrada = 0.00
         try:
             valor = float(entrada)
-            self.anulacionesEntryValue.set(valor)
+            # self.anulacionesEntryValue.set(valor)
             self.datosHoy['Ventas']['Anulaciones'] = entrada
             return True
         except InvalidOperation:
@@ -149,7 +144,7 @@ class VentasFrame(ttk.Frame):
             entrada = 0.00
         try:
             valor = float(entrada)
-            self.devolucionesEntryValue.set(valor)
+            # self.devolucionesEntryValue.set(valor)
             self.datosHoy['Ventas']['Devoluciones'] = entrada
             return True
         except InvalidOperation:
@@ -164,20 +159,6 @@ class VentasFrame(ttk.Frame):
 
     def devolucionesEntryReturn(self, event):
         self.cortesiaTipoCombo.focus()
-
-#--------------------------- Tipo de cortesia ----------------------------------------------
-    # def cortesiaTipoCheck(self, event):
-    #     valor = self.cortesiaTipoValue.get()
-    #     if valor == None or valor == '':
-    #         showwarning('Tipo de cortesía', message=f'Debe selecionar el tipo de cortesía.')
-    #         self.cortesiaTipoCombo.focus()
-    #         return False
-    #     else:
-    #         return True
-   
-
-    # def cortesiaTipoComboReturn(self, event):
-    #     self.cortesiaValorEntry.focus()
 
 #------------------------------Valor de la cortesia -------------------------------------------
     def validateCortesiaValor(self, entrada):
