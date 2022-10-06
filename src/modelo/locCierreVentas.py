@@ -1,9 +1,10 @@
+from re import S
 import sqlite3
 import modelo.DBConnection as DBConnection
 from sqlite3 import Error
 from tkinter.messagebox import *
 from  datetime import date
-from json import dumps
+from json import dumps, loads
 import ast
 
 
@@ -63,9 +64,12 @@ class CierreVentas():
     @property
     def data(self):
         return self._data
+        # print(self._data)
+        # return dict(ast.literal_eval(loads(self._data)))
     
     @data.setter
     def data(self, data):
+        # self._data = dumps(data)
         self._data = data
 
     @property
@@ -137,31 +141,33 @@ class CierreVentas():
         self.cursor.execute(selStr, (idLocal, fecha.strftime('%Y-%m-%d')))
         self.cierreVentas = self.cursor.fetchone()
         if self.cierreVentas:
-            # print('\nCierre Ventas[3]:')
-            # print(type(self.cierreVentas[3]))
-            # print(self.cierreVentas[3])
+            print('\nCierre Ventas[3]:')
+            print(type(self.cierreVentas[3]))
+            print(self.cierreVentas[3])
 
             self.idCierreVentas = self.cierreVentas[0]
             self.idLocal = idLocal
             self.fecha = fecha
-            self.data = ast.literal_eval(self.cierreVentas[3])
+            # self.data = ast.literal_eval(self.cierreVentas[3])
+            self.data = self.cierreVentas[3]
             self.por = self.cierreVentas[4]
             
-            # print('\n_data:')
-            # print(type(self._data))
-            # print(self._data)
-            # print('\ndata:')
-            # print(type(self.data))
-            # print(self.data)
+            print('\n_data:')
+            print(type(self._data))
+            print(self._data)
+            print('\ndata:')
+            print(type(self.data))
+            print(self.data)
         else:
             self.idCierreVentas = 0
             self.idLocal = idLocal
             self.fecha = fecha
             self.data = self.estructuraBase
             self.por = None
-            # print(type(self.estructuraBase))
-            # print(self.estructuraBase)
-            # print(type(self._data))
-            # print(self._data)
-            # print(type(self.data))
-            # print(self.data)
+            
+            print(type(self.estructuraBase))
+            print(self.estructuraBase)
+            print(type(self._data))
+            print(self._data)
+            print(type(self.data))
+            print(self.data)

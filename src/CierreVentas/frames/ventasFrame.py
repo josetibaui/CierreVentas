@@ -28,15 +28,16 @@ class VentasFrame(ttk.Frame):
         self.ventasFrameSetValues()
 
     def ventasFrameSetValues(self):
-        datosVentas = self.datosHoy['Ventas']
-        self.ventasEntryValue.set(datosVentas['VentaTotal'])
-        self.anulacionesEntryValue.set(datosVentas['Anulaciones'])
-        self.devolucionesEntryValue.set(datosVentas['Devoluciones'])
+        datosVentas = self.datosHoy["Ventas"]
+        print(f'Entrada a Ventas Frame. Tipo de datosVentas: {type(datosVentas)}\n{datosVentas}')
+        self.ventasEntryValue.set(datosVentas["VentaTotal"])
+        self.anulacionesEntryValue.set(datosVentas["Anulaciones"])
+        self.devolucionesEntryValue.set(datosVentas["Devoluciones"])
         
         for idCortesia in self.cortesiasTree.get_children():
             self.cortesiasTree.delete(idCortesia)
 
-        for cortesia in datosVentas['Cortesias']:
+        for cortesia in datosVentas["Cortesias"]:
             self.cortesiasTree.insert('', tk.END,
                                 values=(cortesia[0],
                                         cortesia[1],
@@ -45,71 +46,95 @@ class VentasFrame(ttk.Frame):
 #------------------------Salida-------------------------
     def ventasFrameExit(self, event):
         
-        ventaTotal = self.ventasEntryValue.get()
-        if ventaTotal == '' or ventaTotal == None:
+        # ventaTotal = self.ventasEntryValue.get()
+        # if ventaTotal == '' or ventaTotal == None:
+        #     ventaTotal = 0
+        try:
+            ventaTotal = float(self.ventasEntryValue.get())
+        except ValueError:
             ventaTotal = 0
-        ventaTotal = float(ventaTotal)
 
-        anulaciones = self.anulacionesEntryValue.get()
-        if anulaciones == '' or anulaciones == None:
+        try:
+            anulaciones = float(self.anulacionesEntryValue.get())
+        except ValueError:
             anulaciones = 0
-        anulaciones = float(anulaciones)
 
-        devoluciones = self.devolucionesEntryValue.get()
-        if devoluciones == '' or devoluciones == None:
+        try:
+            devoluciones = float(self.devolucionesEntryValue.get())
+        except ValueError:
             devoluciones = 0
-        devoluciones = float(devoluciones)    
+
+        # anulaciones = self.anulacionesEntryValue.get()
+        # if anulaciones == '' or anulaciones == None:
+        #     anulaciones = 0
+        # anulaciones = float(anulaciones)
+
+        # devoluciones = self.devolucionesEntryValue.get()
+        # if devoluciones == '' or devoluciones == None:
+        #     devoluciones = 0
+        # devoluciones = float(devoluciones)    
 
         totalGastosGenerales = 0
-        for gastoGeneral in self.datosHoy['GastosGenerales']:
+        for gastoGeneral in self.datosHoy["GastosGenerales"]:
             totalGastosGenerales += float(gastoGeneral[1])
 
         totalPagosPersonal = 0
-        for pagoPersonal in self.datosHoy['PagosPersonal']:
+        for pagoPersonal in self.datosHoy["PagosPersonal"]:
             totalPagosPersonal += float(pagoPersonal[2])
 
         totalDepositos = 0
-        for deposito in self.datosHoy['Depositos']:
+        for deposito in self.datosHoy["Depositos"]:
             totalDepositos += float(deposito[1])
         
-        # print(f'===================================Tipo ventatotal: {type(ventaTotal)}----------------------------------------')
-        diferencia = ventaTotal - totalGastosGenerales - totalPagosPersonal - totalDepositos
-        # print(f'===================================Tipo diferencia: {type(diferencia)}----------------------------------------')
+        diferencia = ventaTotal - totalGastosGenerales - totalPagosPersonal - totalDepositos - totalDepositos
         listaCortesias = []
         for idCortesia in self.cortesiasTree.get_children():
             cortesia = self.cortesiasTree.item(idCortesia)['values']
             if float(cortesia[1]) != 0.0:
                 listaCortesias.append(cortesia)
 
-        datosVentas = {
-            'VentaTotal': ventaTotal,
-            'Anulaciones': anulaciones,
-            'Devoluciones': devoluciones,
-            'Diferencia': ventaTotal ,
-            'Cortesias': listaCortesias
-        }
+        # datosVentas = {
+        #     'VentaTotal': ventaTotal,
+        #     'Anulaciones': anulaciones,
+        #     'Devoluciones': devoluciones,
+        #     'Diferencia': diferencia ,
+        #     'Cortesias': listaCortesias
+        # }
+        # datosVentas = {
+        #     'VentaTotal': self.ventasEntryValue.get(),
+        #     'Anulaciones': self.anulacionesEntryValue.get(),
+        #     'Devoluciones': self.devolucionesEntryValue.get(),
+        #     'Diferencia': diferencia,
+        #     'Cortesias': listaCortesias
+        # }
 
-        self.datosHoy['Ventas'] = datosVentas
+        self.datosHoy["Ventas"] = {
+            "VentaTotal": self.ventasEntryValue.get(),
+            "Anulaciones": self.anulacionesEntryValue.get(),
+            "Devoluciones": self.devolucionesEntryValue.get(),
+            "Diferencia": diferencia,
+            "Cortesias": listaCortesias
+        }
 
 #------------------- Ventas -------------------------------------------
     def validateVentas(self, entrada):
-        if entrada == None or entrada == '':
-            entrada = 0.00
+        # if entrada == None or entrada == '':
+        #     entrada = ''
         try:
-            valor = float(entrada)
+            # valor = float(entrada)
             # self.ventasEntryValue.set(valor)
-            self.datosHoy['Ventas']['VentaTotal'] = entrada
+            self.datosHoy["Ventas"]["VentaTotal"] = float(entrada)
             return True
-        except InvalidOperation:
-            self.ventasEntryValue.set('')
-            self.ventasEntry.focus()
+        except ValueError:
+            # self.ventasEntryValue.set('')
+            # self.ventasEntry.focus()
             return False
         
             
     def inValidateVentas(self):
         showerror(title='Error', message='Se debe ingresar un valor')
-        self.ventasEntryValue.set('')
-        self.fd.rw.datosHoy['Ventas']['VentaTotal'] = ''
+        self.ventasEntryValue.set('0')
+        # self.fd.rw.datosHoy['Ventas']['VentaTotal'] = ''
         self.ventasEntry.focus()
 
     def ventasEntryReturn(self, event):
@@ -117,21 +142,22 @@ class VentasFrame(ttk.Frame):
 
 # --------------------------Anulaciones----------------------------------------------------
     def validateAnulaciones(self, entrada):
-        if entrada == None or entrada == '':
-            entrada = 0.00
+        # if entrada == None or entrada == '':
+        #     entrada = ''
         try:
-            valor = float(entrada)
+            # valor = float(entrada)
             # self.anulacionesEntryValue.set(valor)
-            self.datosHoy['Ventas']['Anulaciones'] = entrada
+            self.datosHoy['Ventas']['Anulaciones'] = float(entrada)
             return True
-        except InvalidOperation:
-            self.anulacionesEntryValue.set('')
+        except ValueError:
+            # self.anulacionesEntryValue.set('')
+            # self.anulacionesEntry.focus()
             return False
 
     def inValidateAnulaciones(self):
         showerror(title='Error', message='Se debe ingresar un valor')
-        self.anulacionesEntryValue.set('')
-        self.datosHoy['Ventas']['Anulaciones'] = ''
+        self.anulacionesEntryValue.set('0')
+        # self.datosHoy['Ventas']['Anulaciones'] = ''
         self.anulacionesEntry.focus()
 
     def anulacionesEntryReturn(self, event):
@@ -140,20 +166,20 @@ class VentasFrame(ttk.Frame):
 
 #-----------------------------------Devoluciones -------------------------------------------------
     def validateDevoluciones(self, entrada):
-        if entrada == None or entrada == '':
-            entrada = 0.00
+        # if entrada == None or entrada == '':
+        #     entrada = ''
         try:
-            valor = float(entrada)
+            # valor = float(entrada)
             # self.devolucionesEntryValue.set(valor)
-            self.datosHoy['Ventas']['Devoluciones'] = entrada
+            self.datosHoy['Ventas']['Devoluciones'] = float(entrada)
             return True
-        except InvalidOperation:
-            self.devolucionesEntryValue.set('')
+        except ValueError:
+            # self.devolucionesEntryValue.set('')
             return False
 
     def inValidateDevoluciones(self):
         showerror(title='Error', message='Se debe ingresar un valor')
-        self.devolucionesEntryValue.set('')
+        self.devolucionesEntryValue.set('0')
         self.datosHoy['Ventas']['Anulaciones'] = ''
         self.devolucionesEntry.focus()
 
