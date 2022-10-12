@@ -15,19 +15,31 @@ class CierreVentas():
     _fecha = None
     _data = None
     _idPor = None
+    # _estructuraBase = {
+            # "FormasPagos" : {
+                # "Efectivo" : "",
+                # "FormasPagos": [] },
+            # "GastosGenerales": [],
+            # "PagosPersonal" : [],
+            # "Depositos" : [],
+            # "Ventas": {
+                # "VentaTotal" : "",
+                # "Anulaciones" :  "",
+                # "Devoluciones" : "",
+                # "Diferencia": "",
+                # "Cortesias" : [] }
+        # }
     _estructuraBase = {
-            "Ventas": {
-                "VentaTotal" : "",
-                "Anulaciones" :  "",
-                "Devoluciones" : "",
-                "Diferencia": "",
-                "Cortesias" : [] },
-            "FormasPagos" : {
-                "Efectivo" : "",
-                "FormasPagos": [] },
+            "PagoEfectivo" : "",
+            "FormasPagos": [],
             "GastosGenerales": [],
             "PagosPersonal" : [],
-            "Depositos" : []
+            "Depositos" : [],
+            "Ventas" : "",
+            "Anulaciones" :  "",
+            "Devoluciones" : "",
+            "Diferencia": "",
+            "Cortesias" : []
         }
 
     def __init__(self):
@@ -63,13 +75,16 @@ class CierreVentas():
 
     @property
     def data(self):
-        return self._data
+        # return loads(self._data)
         # print(self._data)
         # return dict(ast.literal_eval(loads(self._data)))
+        # print(f'Get data. Tipo: {type(self._data)}\n{self._data}')
+        return(self._data)
     
     @data.setter
     def data(self, data):
         # self._data = dumps(data)
+        # print(f'Set data. Tipo: {type(data)}\n{data}')
         self._data = data
 
     @property
@@ -86,6 +101,7 @@ class CierreVentas():
 
     def __str__(self):
         return str(self.cierreVentasValues)
+    
 
     def cierreVentasValues(self):
         return [
@@ -141,23 +157,24 @@ class CierreVentas():
         self.cursor.execute(selStr, (idLocal, fecha.strftime('%Y-%m-%d')))
         self.cierreVentas = self.cursor.fetchone()
         if self.cierreVentas:
-            print('\nCierre Ventas[3]:')
-            print(type(self.cierreVentas[3]))
-            print(self.cierreVentas[3])
+            # print('\nCierre Ventas[3]:')
+            # print(type(self.cierreVentas[3]))
+            # print(self.cierreVentas[3])
 
             self.idCierreVentas = self.cierreVentas[0]
             self.idLocal = idLocal
             self.fecha = fecha
-            # self.data = ast.literal_eval(self.cierreVentas[3])
-            self.data = self.cierreVentas[3]
+            self.data = ast.literal_eval(self.cierreVentas[3])
+            # self.data = self.cierreVentas[3]
+            # self.data = self.cierreVentas[3]
             self.por = self.cierreVentas[4]
             
-            print('\n_data:')
-            print(type(self._data))
-            print(self._data)
-            print('\ndata:')
-            print(type(self.data))
-            print(self.data)
+            # print('\n_data:')
+            # print(type(self._data))
+            # print(self._data)
+            # print('\ndata:')
+            # print(type(self.data))
+            # print(self.data)
         else:
             self.idCierreVentas = 0
             self.idLocal = idLocal
@@ -165,9 +182,9 @@ class CierreVentas():
             self.data = self.estructuraBase
             self.por = None
             
-            print(type(self.estructuraBase))
-            print(self.estructuraBase)
-            print(type(self._data))
-            print(self._data)
-            print(type(self.data))
-            print(self.data)
+            # print(type(self.estructuraBase))
+            # print(self.estructuraBase)
+            # print(type(self._data))
+            # print(self._data)
+            # print(type(self.data))
+            # print(self.data)

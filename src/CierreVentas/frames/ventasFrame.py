@@ -28,16 +28,27 @@ class VentasFrame(ttk.Frame):
         self.ventasFrameSetValues()
 
     def ventasFrameSetValues(self):
-        datosVentas = self.datosHoy["Ventas"]
-        print(f'Entrada a Ventas Frame. Tipo de datosVentas: {type(datosVentas)}\n{datosVentas}')
-        self.ventasEntryValue.set(datosVentas["VentaTotal"])
-        self.anulacionesEntryValue.set(datosVentas["Anulaciones"])
-        self.devolucionesEntryValue.set(datosVentas["Devoluciones"])
+        datosVentas = self.datosHoy
+        # print(f'Entrada a Ventas Frame. Tipo de datosVentas: {type(datosVentas)}\n{datosVentas}')
+        try:
+            self.ventasEntryValue.set(float(self.datosHoy["Ventas"]))
+        except ValueError:
+            self.ventasEntryValue.set('')
         
+        try:
+            self.anulacionesEntryValue.set(float(self.datosHoy["Anulaciones"]))
+        except ValueError:
+            self.anulacionesEntryValue.set('')
+            
+        try:
+            self.devolucionesEntryValue.set(float(self.datosHoy["Devoluciones"]))
+        except ValueError:
+            self.devolucionesEntryValue.set('')
+            
         for idCortesia in self.cortesiasTree.get_children():
             self.cortesiasTree.delete(idCortesia)
 
-        for cortesia in datosVentas["Cortesias"]:
+        for cortesia in self.datosHoy["Cortesias"]:
             self.cortesiasTree.insert('', tk.END,
                                 values=(cortesia[0],
                                         cortesia[1],
@@ -87,11 +98,14 @@ class VentasFrame(ttk.Frame):
             totalDepositos += float(deposito[1])
         
         diferencia = ventaTotal - totalGastosGenerales - totalPagosPersonal - totalDepositos - totalDepositos
+        # print(f'Diferencia:{diferencia}')
         listaCortesias = []
         for idCortesia in self.cortesiasTree.get_children():
             cortesia = self.cortesiasTree.item(idCortesia)['values']
+            # print(f'Una cortesia: {cortesia}')
             if float(cortesia[1]) != 0.0:
                 listaCortesias.append(cortesia)
+                # print(f'Lista de Cortesías: {listaCortesias}')
 
         # datosVentas = {
         #     'VentaTotal': ventaTotal,
@@ -108,13 +122,20 @@ class VentasFrame(ttk.Frame):
         #     'Cortesias': listaCortesias
         # }
 
-        self.datosHoy["Ventas"] = {
-            "VentaTotal": self.ventasEntryValue.get(),
-            "Anulaciones": self.anulacionesEntryValue.get(),
-            "Devoluciones": self.devolucionesEntryValue.get(),
-            "Diferencia": diferencia,
-            "Cortesias": listaCortesias
-        }
+        # self.datosHoy["Ventas"] = {
+        #     "VentaTotal": self.ventasEntryValue.get(),
+        #     "Anulaciones": self.anulacionesEntryValue.get(),
+        #     "Devoluciones": self.devolucionesEntryValue.get(),
+        #     "Diferencia": diferencia,
+        #     "Cortesias": listaCortesias
+        # }
+        self.datosHoy["Ventas"] = self.ventasEntryValue.get()
+        self.datosHoy["Anulaciones"] = self.anulacionesEntryValue.get()
+        self.datosHoy["Devoluciones"] = self.devolucionesEntryValue.get()
+        self.datosHoy["Diferencia"] = diferencia
+        self.datosHoy["Cortesias"] = listaCortesias
+        # print(f'Datos Hoy: {self.datosHoy}')
+        
 
 #------------------- Ventas -------------------------------------------
     def validateVentas(self, entrada):
@@ -123,7 +144,8 @@ class VentasFrame(ttk.Frame):
         try:
             # valor = float(entrada)
             # self.ventasEntryValue.set(valor)
-            self.datosHoy["Ventas"]["VentaTotal"] = float(entrada)
+            # self.datosHoy["Ventas"]["VentaTotal"] = float(entrada)
+            self.datosHoy["Ventas"] = float(entrada)
             return True
         except ValueError:
             # self.ventasEntryValue.set('')
@@ -147,7 +169,8 @@ class VentasFrame(ttk.Frame):
         try:
             # valor = float(entrada)
             # self.anulacionesEntryValue.set(valor)
-            self.datosHoy['Ventas']['Anulaciones'] = float(entrada)
+            # self.datosHoy['Ventas']['Anulaciones'] = float(entrada)
+            self.datosHoy['Anulaciones'] = float(entrada)
             return True
         except ValueError:
             # self.anulacionesEntryValue.set('')
@@ -171,7 +194,8 @@ class VentasFrame(ttk.Frame):
         try:
             # valor = float(entrada)
             # self.devolucionesEntryValue.set(valor)
-            self.datosHoy['Ventas']['Devoluciones'] = float(entrada)
+            # self.datosHoy['Ventas']['Devoluciones'] = float(entrada)
+            self.datosHoy['Devoluciones'] = float(entrada)
             return True
         except ValueError:
             # self.devolucionesEntryValue.set('')
@@ -180,7 +204,7 @@ class VentasFrame(ttk.Frame):
     def inValidateDevoluciones(self):
         showerror(title='Error', message='Se debe ingresar un valor')
         self.devolucionesEntryValue.set('0')
-        self.datosHoy['Ventas']['Anulaciones'] = ''
+        # self.datosHoy['Ventas']['Anulaciones'] = ''
         self.devolucionesEntry.focus()
 
     def devolucionesEntryReturn(self, event):

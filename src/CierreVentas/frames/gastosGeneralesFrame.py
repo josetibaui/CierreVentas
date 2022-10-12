@@ -75,7 +75,7 @@ class GastosGeneralesFrame(ttk.Frame):
         gastoGeneralObservacion = self.gastoGeneralObservacionValue.get()
         try:
             gastoGeneralValor = float(self.gastoGeneralValorValue.get())
-        except InvalidOperation:
+        except ValueError:
             gastoGeneralValor = 0
 
         if(gastoGeneralValor == None or gastoGeneralValor == '' or gastoGeneralValor  == 0):

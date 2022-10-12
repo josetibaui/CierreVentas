@@ -25,8 +25,9 @@ class ResumenFrame(ttk.Frame):
         getcontext().prec = 4
 
 #-------------Ventas-----------------------
-        ventas = self.datosHoy['Ventas']
-        ventaTotal = float(ventas['VentaTotal'])
+        # ventas = self.datosHoy['Ventas']
+        ventas = self.datosHoy
+        ventaTotal = float(ventas['Ventas'])
         devoluciones = ventas['Devoluciones']
         anulaciones = ventas['Anulaciones']
         totalCortesias = 0.0
@@ -42,14 +43,16 @@ class ResumenFrame(ttk.Frame):
 
 # ----------------------------Formas de Pago ----------------------------------------
 
-        valor = self.datosHoy['FormasPagos']['Efectivo']
+        # valor = self.datosHoy['FormasPagos']['Efectivo']
+        valor = self.datosHoy['PagoEfectivo']
         if valor == None or valor == '':
             valor = 0.0
         efectivo = float(valor)
         self.valores['efectivo'].set('{:-.2f}'.format(efectivo))
 
         totalFormasPagos = 0
-        for formaPago in self.datosHoy['FormasPagos']['FormasPagos']:
+        # for formaPago in self.datosHoy['FormasPagos']['FormasPagos']:
+        for formaPago in self.datosHoy['FormasPagos']:
             totalFormasPagos += float(formaPago[1])
         self.valores['formasPagos'].set('{:-.2f}'.format(totalFormasPagos))
 

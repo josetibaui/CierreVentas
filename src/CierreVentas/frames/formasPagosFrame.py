@@ -27,8 +27,9 @@ class FormasPagosFrame(ttk.Frame):
     def formasPagosFrameSetValues(self):
         for idFormaPago in self.formasPagosTree.get_children():
             self.formasPagosTree.delete(idFormaPago)
-        formasPagos = self.df.datosHoy['FormasPagos']
-        for formaPago in formasPagos['FormasPagos']:
+        # formasPagos = self.df.datosHoy['FormasPagos']
+        # for formaPago in formasPagos['FormasPagos']:
+        for formaPago in self.df.datosHoy['FormasPagos']:
             self.formasPagosTree.insert('', tk.END, 
                             values=(formaPago[0],
                                     formaPago[1],
@@ -48,15 +49,18 @@ class FormasPagosFrame(ttk.Frame):
             if float(formaPago[1]) != 0:
                 listaFormasPago.append(formaPago)
 
-        datosFormasPago = {
-            'Efectivo': efectivo,
-            'FormasPagos': listaFormasPago
-        }
+        # datosFormasPago = {
+        #     'Efectivo': efectivo,
+        #     'FormasPagos': listaFormasPago
+        # }
 
-        self.datosHoy['FormasPagos'] = datosFormasPago
+        # self.datosHoy['FormasPagos'] = datosFormasPago
+        self.datosHoy['PagoEfectivo'] = efectivo
+        self.datosHoy['FormasPagos'] = listaFormasPago
 #-------------------Efectivo------------------------------
     def calcularPagoEfectivo(self):
-        ventaTotal = self.datosHoy['Ventas']['VentaTotal']
+        # ventaTotal = self.datosHoy['Ventas']['VentaTotal']
+        ventaTotal = self.datosHoy['Ventas']
         if ventaTotal == '' or ventaTotal == None:
             ventaTotal = 0.0
         ventaTotal = float(ventaTotal)

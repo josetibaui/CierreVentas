@@ -92,3 +92,6 @@ class DataFrame(ttk.Frame):
             self.cierreVentas.insert()
         else:
             self.cierreVentas.update()
+    
+    def sendData(self):
+        pass
