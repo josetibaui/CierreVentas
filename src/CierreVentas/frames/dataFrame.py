@@ -38,6 +38,7 @@ class DataFrame(ttk.Frame):
             'blankFrame': blankFrame.BlankFrame(self)
         }    
 
+        self.setFramesValues()
         self.cambiarFrame('loginFrame','loginFrame')
 
     def gridConfigure(self, subFrame):
@@ -59,33 +60,33 @@ class DataFrame(ttk.Frame):
         subFrame.rowconfigure(10, weight=1)
 
 
+    def setFramesValues(self):
+        self.dataFrames['ventasFrame'].ventasFrameSetValues(self)
+        
     def cambiarFrame(self, destino, origen=None):
         if origen != 'loginFrame':
             self.saveData()
         self.dataFrames[destino].tkraise()
-        if destino == 'loginFrame':
-            self.dataFrames['loginFrame'].usuarioEntry.focus()
-        if destino == 'ventasFrame':
-            self.dataFrames['ventasFrame'].ventasFrameSetValues()
-            self.dataFrames['ventasFrame'].ventasEntry.focus()
-        elif destino == 'formasPagosFrame':
-            self.dataFrames['formasPagosFrame'].formasPagosFrameSetValues()
-            self.dataFrames['formasPagosFrame'].formaPagoTipoCombo.focus()
-        elif destino == 'gastosGeneralesFrame':
-            self.dataFrames['gastosGeneralesFrame'].gastosGeneralesFrameSetValues()
-            self.dataFrames['gastosGeneralesFrame'].gastoGeneralTipoCombo.focus()
-        elif destino == 'pagosPersonalFrame':
-            self.dataFrames['pagosPersonalFrame'].pagosPersonalFrameSetValues()
-            self.dataFrames['pagosPersonalFrame'].pagoPersonalEmpleadosCombo.focus()
-        elif destino == 'depositosFrame':
-             self.dataFrames['depositosFrame'].depositosFrameSetValues()
-             self.dataFrames['depositosFrame'].depositoBancosCombo.focus()
-        elif destino == 'resumenFrame':
-             self.dataFrames['resumenFrame'].resumenFrameSetValues()
+        # if destino == 'loginFrame':
+        #     self.dataFrames['loginFrame'].usuarioEntry.focus()
+        # if destino == 'ventasFrame':
+        #     self.dataFrames['ventasFrame'].ventasFrameSetValues()
+        #     self.dataFrames['ventasFrame'].ventasEntry.focus()
+        # elif destino == 'formasPagosFrame':
+        #     self.dataFrames['formasPagosFrame'].formasPagosFrameSetValues()
+        #     self.dataFrames['formasPagosFrame'].formaPagoTipoCombo.focus()
+        # elif destino == 'gastosGeneralesFrame':
+        #     self.dataFrames['gastosGeneralesFrame'].gastosGeneralesFrameSetValues()
+        #     self.dataFrames['gastosGeneralesFrame'].gastoGeneralTipoCombo.focus()
+        # elif destino == 'pagosPersonalFrame':
+        #     self.dataFrames['pagosPersonalFrame'].pagosPersonalFrameSetValues()
+        #     self.dataFrames['pagosPersonalFrame'].pagoPersonalEmpleadosCombo.focus()
+        # elif destino == 'depositosFrame':
+        #      self.dataFrames['depositosFrame'].depositosFrameSetValues()
+        #      self.dataFrames['depositosFrame'].depositoBancosCombo.focus()
+        # elif destino == 'resumenFrame':
+        #      self.dataFrames['resumenFrame'].resumenFrameSetValues()
 
-# '''
-#    Si los datos son diferentes de una estructura vacía se graba en la base de datos
-# '''
     def saveData(self):
         self.cierreVentas.idPor = self.rw.ident[0]
         if self.cierreVentas.idCierreVentas == 0:
